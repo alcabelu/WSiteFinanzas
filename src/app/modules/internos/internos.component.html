@@ -176,7 +176,7 @@
             <span class="fa fa-caret-down" title="Toggle dropdown menu"></span>
           </button>
         </div>
-        <table *ngIf='showResultados && !showDetalleResultados' class="table table-sm table-bordered table-fixed table-hover-td">
+        <table *ngIf='showResultados && !showDetallePrimerNivel' class="table table-sm table-bordered table-fixed table-hover-td">
           <thead>
             <tr>
               <th class="bg-secondary text-white col-width-concepto">Concepto</th>
@@ -198,37 +198,37 @@
             <ng-container *ngFor='let r of estadoResultados; let i = index;'>
               <tr [ngClass]="{'font-weight-bold': i === 2 || i === 4 || i === 8 || i === 10 || i === 15 || i === 19 || i === 21 || i === 22 || i === 23 || i === 24 || i === 25 || i === 26}">
                 <td class="col-width-concepto">{{ r.Concepto }}</td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.Real, 'Real')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Real, 'Real')">
                   {{ r.Real | number:'1.2-2' }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Perc1 | number:'1.2-2' }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.PPto, 'PPto')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.PPto, 'PPto')">
                   {{ r.PPto | number:'1.2-2'}}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Perc2 | number:'1.2-2' }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.Variacion, 'Variacion')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Variacion, 'Variacion')">
                   {{ r.Variacion | number:'1.2-2' }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Perc3 | number:'1.2-2' }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.AcReal, 'AcReal')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcReal, 'AcReal')">
                   {{ r.AcReal | number:'1.2-2' }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.AcPerc1 | number:'1.2-2' }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.AcPPto, 'AcPPto')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcPPto, 'AcPPto')">
                   {{ r.AcPPto | number:'1.2-2' }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.AcPerc2 | number:'1.2-2' }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickCell(i, r.AcVariacion, 'AcVariacion')">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcVariacion, 'AcVariacion')">
                   {{ r.AcVariacion | number:'1.2-2' }}
                 </td>
                 <td class="text-right col-width-perc">
@@ -240,12 +240,12 @@
         </table>
 
         <!-- BEGIN Detalle de Resultados -->
-        <div *ngIf='showDetalleResultados' class="card-body">
-          <button type="button" class="close" (click)='showDetalleResultados = false'>
+        <div *ngIf='showDetallePrimerNivel' class="card-body">
+          <button type="button" class="close" (click)='hideDetallePrimerNivel()'>
             <span>&times;</span>
           </button>
           <p><b>Concepto:</b> {{ detalleConcepto }} <b>{{ detalleName }}:</b> {{ detalleValue | number:'1.2-2' }}</p>
-          <table class="table table-sm table-bordered table-fixed">
+          <table class="table table-sm table-bordered table-fixed table-hover-td">
             <thead>
               <tr>
                 <th class="bg-secondary text-white col-md-4">No. Cuenta</th>
@@ -257,12 +257,12 @@
               <tr>
                 <td class="col-md-4">4003-0030-0001-0008</td>
                 <td class="col-md-4">Ventas de S-CROSS GL </td>
-                <td class="col-md-4">855,547.61</td>
+                <td class="col-md-4" (click)="onClickDetalleSegundoNivel(0, 855547.61, 'Saldo Mensual')">855,547.61</td>
               </tr>
               <tr>
                 <td class="col-md-4">4003-0030-0001-0014</td>
                 <td class="col-md-4">Ventas de CIAZ</td>
-                <td class="col-md-4">431,017.25</td>
+                <td class="col-md-4" (click)="onClickDetalleSegundoNivel(1, 431017.25, 'Saldo Mensual')">431,017.25</td>
               </tr>
               <tr>
                 <td class="col-md-4">4003-0030-0001-0015</td>
@@ -408,6 +408,178 @@
           </table>
         </div>
         <!-- END Detalle de resultados -->
+
+        <!-- BEGIN Detalle Segundo Nivel -->
+        <div *ngIf='showDetalleSegundoNivel' class="card-body">
+          <button type="button" class="close" (click)='hideDetalleSegundoNivel()'>
+            <span>&times;</span>
+          </button>
+          <p>
+            <b>Concepto:</b> {{ detalleConceptoSegundoNivel }} <b>{{ detalleNameSegundoNivel }}:</b> {{ detalleValueSegundoNivel | number:'1.2-2' }}
+          </p>
+          <table class="table table-sm table-bordered table-fixed">
+              <thead>
+                <tr>
+                  <th class="bg-secondary text-white col-md-4">No. Cuenta</th>
+                  <th class="bg-secondary text-white col-md-4">Descripción</th>
+                  <th class="bg-secondary text-white col-md-4">Saldo Mensual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">431,017.25</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">1,599,068.97</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0002-0005</td>
+                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">1,172,719.03</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0001</td>
+                  <td class="col-md-4">Ventas de SWIFT GA</td>
+                  <td class="col-md-4">3,735,983.92</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">230,445.54</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">2,629,198.29</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4602-0030-0006-0005</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">-22,606.89</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4603-0030-0001-0090</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
+                  <td class="col-md-4">-101,803.54</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">431,017.25</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">1,599,068.97</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0002-0005</td>
+                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">1,172,719.03</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0001</td>
+                  <td class="col-md-4">Ventas de SWIFT GA</td>
+                  <td class="col-md-4">3,735,983.92</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">230,445.54</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">2,629,198.29</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4602-0030-0006-0005</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">-22,606.89</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4603-0030-0001-0090</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
+                  <td class="col-md-4">-101,803.54</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">431,017.25</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0001-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">1,599,068.97</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0002-0005</td>
+                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">1,172,719.03</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0001</td>
+                  <td class="col-md-4">Ventas de SWIFT GA</td>
+                  <td class="col-md-4">3,735,983.92</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0008</td>
+                  <td class="col-md-4">Ventas de S-CROSS GL </td>
+                  <td class="col-md-4">855,547.61</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0014</td>
+                  <td class="col-md-4">Ventas de CIAZ</td>
+                  <td class="col-md-4">230,445.54</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4003-0030-0003-0015</td>
+                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
+                  <td class="col-md-4">2,629,198.29</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4602-0030-0006-0005</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
+                  <td class="col-md-4">-22,606.89</td>
+                </tr>
+                <tr>
+                  <td class="col-md-4">4603-0030-0001-0090</td>
+                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
+                  <td class="col-md-4">-101,803.54</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <!-- END Detalle Segundo Nivel -->
       </div>
     </div>
   </div>

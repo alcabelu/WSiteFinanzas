@@ -50,7 +50,8 @@ export class InternosComponent implements OnInit {
   showUnidadesDepartamento = true;
   showEfectivoSituacion = false;
   showReporteUnidades = true;
-  showDetalleResultados = false;
+  showDetallePrimerNivel = false;
+  showDetalleSegundoNivel = false;
   isCollapsed = true;
 
   resultadoUnidadesService: IResultadoInternos[] = [];
@@ -71,6 +72,9 @@ export class InternosComponent implements OnInit {
   detalleName: string;
   detalleValue: number;
   detalleConcepto: string;
+  detalleNameSegundoNivel: string;
+  detalleValueSegundoNivel: number;
+  detalleConceptoSegundoNivel: string;
 
   resultadoUnidades: IResultadoInternos[] = [];
 
@@ -285,10 +289,33 @@ export class InternosComponent implements OnInit {
     }
   }
 
-  onClickCell(i: number, value: number, name: string) {
-    this.showDetalleResultados = true;
+
+
+  onClickResultado(i: number, value: number, name: string) {
+    this.showDetallePrimerNivel = true;
     this.detalleName = name;
     this.detalleValue = value;
     this.detalleConcepto = this.estadoResultados[i].Concepto;
+  }
+
+  onClickDetalleSegundoNivel(i: number, value: number, name: string) {
+    this.showResultados = false;
+    this.showDetallePrimerNivel = false;
+    this.showDetalleSegundoNivel = true;
+    this.detalleNameSegundoNivel = name;
+    this.detalleValueSegundoNivel = value;
+    this.detalleConceptoSegundoNivel = 'Ventas...';
+  }
+
+  hideDetallePrimerNivel(): void {
+    this.showResultados = true;
+    this.showDetalleSegundoNivel = false;
+    this.showDetallePrimerNivel = false;
+  }
+
+  hideDetalleSegundoNivel(): void {
+    this.showResultados = false;
+    this.showDetalleSegundoNivel = false;
+    this.showDetallePrimerNivel = true;
   }
 }
