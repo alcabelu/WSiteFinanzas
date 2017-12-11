@@ -4,7 +4,7 @@ export interface ISucursal {
   Descripcion: string,
   BD: string,
   Servidor: string,
-  MSUC: number,
+  MSUC: string,
   Alias: string,
   HyO: string,
   Tipo: string

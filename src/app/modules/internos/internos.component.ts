@@ -13,6 +13,7 @@ import { IDepartamento } from './departamento';
 import { ITipoReporte } from './tipo-reporte';
 import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
+import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 
 @Component({
   selector: 'app-internos',
@@ -65,9 +66,12 @@ export class InternosComponent implements OnInit {
   departamentos: IDepartamento[] = [];
   tipoReporte: ITipoReporte[];
   detalleUnidadesMensual: IDetalleUnidadesMensual[];
+  detalleResultadosMensual: IDetalleResultadosMensual[];
   selectedCompania = 0;
   selectedTipoReporte = 1;
   selectedSucursal = 'AA';
+  selectedIndexSucursal = 0;
+  selectedIdSucursal = -3; //El servicio SP_CONSULTA_SUCURSAL regresa varios valores, estamos usando IdSucursal y MSUC
   selectedDepartamento = 'Todos';
   mes: string;
   anio: string;
@@ -231,12 +235,30 @@ export class InternosComponent implements OnInit {
   getDetalleUnidadesMensual(concepto: string): void {
     this._service.getDetalleUnidadesMensual({
       idAgencia: this.selectedCompania,
+      mSucursal: this.selectedSucursal,
       anio: this.anio,
       mes: this.mes,
       concepto: concepto
     })
       .subscribe(detalleUnidadesMensual => {
         this.detalleUnidadesMensual = detalleUnidadesMensual;
+      },
+      error => this.errorMessage = <any>error);
+  }
+
+  getDetalleResultadosMensual(concepto: string): void {
+    //Este servicio requiere el Id de la sucursal con un cero a la izquierda
+    this._service.getDetalleResultadosMensual({
+      idAgencia: this.selectedCompania,
+      anio: this.anio,
+      mes: this.mes,
+      idSucursal: this.selectedIdSucursal >= 0 ? '0' + this.selectedIdSucursal.toString() : '00',
+      mSucursal: this.selectedSucursal,
+      departamento: this.selectedDepartamento,
+      concepto: concepto
+    })
+      .subscribe(detalleResultadosMensual => {
+        this.detalleResultadosMensual = detalleResultadosMensual;
       },
       error => this.errorMessage = <any>error);
   }
@@ -280,8 +302,10 @@ export class InternosComponent implements OnInit {
     }
   }
 
-  onChangeSucursal(newValue): void {
-    this.selectedSucursal = newValue;
+  onChangeSucursal(selectedIndex): void {
+    const sucursal = this.sucursales[selectedIndex];
+    this.selectedSucursal = sucursal.MSUC;
+    this.selectedIdSucursal = sucursal.IdSucursal;
 
     if(this.periodo && this.selectedCompania !== 0 && this.selectedSucursal) {
       this.getDepartamentos();
@@ -322,6 +346,7 @@ export class InternosComponent implements OnInit {
     this.detalleName = name;
     this.detalleValue = value;
     this.detalleConcepto = this.estadoResultados[i].Concepto;
+    this.getDetalleResultadosMensual(this.detalleConcepto);
   }
 
   onClickDetalleSegundoNivel(i: number, value: number, name: string) {

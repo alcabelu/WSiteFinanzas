@@ -10,6 +10,7 @@ import { ISucursal } from './sucursal';
 import { IDepartamento } from './departamento';
 import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
+import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 
 @Injectable()
 export class InternosService {
@@ -22,6 +23,7 @@ export class InternosService {
   private _urlUnidadesDepartamento = 'api/internos/unidadesdepto';
   private _urlEfectivoSituacion = 'api/internos/efectivoysituacion';
   private _urlDetalleUnidadesMensual = 'api/internos/detalleunidadesmensual';
+  private _urlDetalleResultadosMensual = 'api/internos/detalleresultadosmensual';
 
   constructor(private _http: HttpClient) { }
 
@@ -120,11 +122,30 @@ export class InternosService {
 
     // Begin assigning parameters
     Params = Params.append('idcia', parameters.idAgencia);
+    Params = Params.append('msuc', parameters.mSucursal);
     Params = Params.append('anio', parameters.anio);
     Params = Params.append('mes', parameters.mes);
     Params = Params.append('concepto', parameters.concepto);
 
     return this._http.get<IDetalleUnidadesMensual[]>(this._urlDetalleUnidadesMensual, { params: Params })
+      // .do(data => console.log('All:' + JSON.stringify(data)))
+      .catch(this.handleError);
+  }
+
+  getDetalleResultadosMensual(parameters): Observable<IDetalleResultadosMensual[]> {
+    // Initialize Params Object
+    let Params = new HttpParams();
+
+    // Begin assigning parameters
+    Params = Params.append('idcia', parameters.idAgencia);
+    Params = Params.append('anio', parameters.anio);
+    Params = Params.append('mes', parameters.mes);
+    Params = Params.append('idsucursal', parameters.idSucursal);
+    Params = Params.append('msucursal', parameters.mSucursal);
+    Params = Params.append('departamento', parameters.departamento);
+    Params = Params.append('concepto', parameters.concepto);
+
+    return this._http.get<IDetalleResultadosMensual[]>(this._urlDetalleResultadosMensual, { params: Params })
       // .do(data => console.log('All:' + JSON.stringify(data)))
       .catch(this.handleError);
   }

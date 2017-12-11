@@ -178,18 +178,51 @@ internos.prototype.get_departamentos = function (req, res, next) {
 internos.prototype.get_detalleunidadesmensual = function (req, res, next) {
   var self = this;
   var idAgencia = req.query.idcia;
+  var mSuc = req.query.msuc;
   var anio = req.query.anio;
   var mes = req.query.mes;
   var concepto = req.query.concepto;
 
   var params = [
     { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'MSuc', value: mSuc, type: self.model.types.STRING },
     { name: 'Anio', value: anio, type: self.model.types.STRING },
     { name: 'Mes', value: mes, type: self.model.types.STRING },
     { name: 'Concepto', value: concepto, type: self.model.types.STRING }
   ];
 
   this.model.query('SP_DETALLE_DE_UNIDADES_MENSUAL', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
+
+// /api/internos/detalleresultadosmensual
+// Funcionalidad para detalle de Estado de Resultados mensual (doble click celdas de lado azul)
+internos.prototype.get_detalleresultadosmensual = function (req, res, next) {
+  var self = this;
+  var idAgencia = req.query.idcia;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var idSucursal = req.query.idsucursal;
+  var mSucursal = req.query.msucursal;
+  var departamento = req.query.departamento;
+  var concepto = req.query.concepto;
+
+  var params = [
+    { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'IdSucursal', value: idSucursal, type: self.model.types.STRING },
+    { name: 'MSucursal', value: idSucursal, type: self.model.types.STRING },
+    { name: 'Departamento', value: departamento, type: self.model.types.STRING },
+    { name: 'Concepto', value: concepto, type: self.model.types.STRING }
+  ];
+
+  this.model.query('SP_ESTADO_DE_RESULTADOS_DETALLE_MENSUAL', params, function (error, result) {
     console.log(params);
     self.view.expositor(res, {
       error: error,
