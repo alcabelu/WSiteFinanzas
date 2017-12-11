@@ -173,6 +173,31 @@ internos.prototype.get_departamentos = function (req, res, next) {
   });
 };
 
+// /api/internos/detalleunidadesmensual
+// Funcionalidad para detalle de Unidades mensual (doble click celdas de lado azul)
+internos.prototype.get_detalleunidadesmensual = function (req, res, next) {
+  var self = this;
+  var idAgencia = req.query.idcia;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var concepto = req.query.concepto;
+
+  var params = [
+    { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'Concepto', value: concepto, type: self.model.types.STRING }
+  ];
+
+  this.model.query('SP_DETALLE_DE_UNIDADES_MENSUAL', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
+
 // /api/internos/efectivoysituacion
 // Funcionalidad para las opciones de efectivo real y situacion financiera
 internos.prototype.get_efectivoysituacion = function (req, res, next) {

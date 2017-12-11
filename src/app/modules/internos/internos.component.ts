@@ -12,6 +12,7 @@ import { ICompania } from './compania';
 import { IDepartamento } from './departamento';
 import { ITipoReporte } from './tipo-reporte';
 import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
+import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 
 @Component({
   selector: 'app-internos',
@@ -50,6 +51,7 @@ export class InternosComponent implements OnInit {
   showUnidadesDepartamento = true;
   showEfectivoSituacion = false;
   showReporteUnidades = true;
+  showDetalleUnidadesPrimerNivel = false;
   showDetallePrimerNivel = false;
   showDetalleSegundoNivel = false;
   isCollapsed = true;
@@ -62,6 +64,7 @@ export class InternosComponent implements OnInit {
   sucursales: ISucursal[];
   departamentos: IDepartamento[] = [];
   tipoReporte: ITipoReporte[];
+  detalleUnidadesMensual: IDetalleUnidadesMensual[];
   selectedCompania = 0;
   selectedTipoReporte = 1;
   selectedSucursal = 'AA';
@@ -69,6 +72,10 @@ export class InternosComponent implements OnInit {
   mes: string;
   anio: string;
   periodo: string;
+
+  detalleUnidadesConcepto: string;
+  detalleUnidadesName: string;
+  detalleUnidadesValue: number;
   detalleName: string;
   detalleValue: number;
   detalleConcepto: string;
@@ -221,6 +228,19 @@ export class InternosComponent implements OnInit {
     this.periodo = anio + '-' + mesStr;
   }
 
+  getDetalleUnidadesMensual(concepto: string): void {
+    this._service.getDetalleUnidadesMensual({
+      idAgencia: this.selectedCompania,
+      anio: this.anio,
+      mes: this.mes,
+      concepto: concepto
+    })
+      .subscribe(detalleUnidadesMensual => {
+        this.detalleUnidadesMensual = detalleUnidadesMensual;
+      },
+      error => this.errorMessage = <any>error);
+  }
+
   getEfectivoSituacion(): void {
     this._service.get_EfectivoSituacion({
       idTipoReporte: this.selectedTipoReporte,
@@ -289,7 +309,13 @@ export class InternosComponent implements OnInit {
     }
   }
 
-
+  onClickUnidades(i: number, value: number, name: string) {
+    this.showDetalleUnidadesPrimerNivel = true;
+    this.detalleUnidadesName = name;
+    this.detalleUnidadesValue = value;
+    this.detalleUnidadesConcepto = this.resultadoUnidades[i].Concepto;
+    this.getDetalleUnidadesMensual(this.detalleUnidadesConcepto);
+  }
 
   onClickResultado(i: number, value: number, name: string) {
     this.showDetallePrimerNivel = true;
@@ -305,6 +331,12 @@ export class InternosComponent implements OnInit {
     this.detalleNameSegundoNivel = name;
     this.detalleValueSegundoNivel = value;
     this.detalleConceptoSegundoNivel = 'Ventas...';
+  }
+
+  hideDetalleUnidadesPrimerNivel(): void {
+    this.showUnidades = true;
+    // this.showDetalleUnidadesSegundoNivel = false;
+    this.showDetalleUnidadesPrimerNivel = false;
   }
 
   hideDetallePrimerNivel(): void {
