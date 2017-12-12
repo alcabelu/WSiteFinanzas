@@ -144,6 +144,7 @@ export class InternosService {
     Params = Params.append('msucursal', parameters.mSucursal);
     Params = Params.append('departamento', parameters.departamento);
     Params = Params.append('concepto', parameters.concepto);
+    Params = Params.append('idEstadoDeResultado', parameters.idEstadoDeResultado);
 
     return this._http.get<IDetalleResultadosMensual[]>(this._urlDetalleResultadosMensual, { params: Params })
       // .do(data => console.log('All:' + JSON.stringify(data)))

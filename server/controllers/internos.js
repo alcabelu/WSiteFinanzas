@@ -211,15 +211,17 @@ internos.prototype.get_detalleresultadosmensual = function (req, res, next) {
   var mSucursal = req.query.msucursal;
   var departamento = req.query.departamento;
   var concepto = req.query.concepto;
+  var idEstadoResultado = req.query.idEstadoDeResultado;
 
   var params = [
     { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
     { name: 'Anio', value: anio, type: self.model.types.STRING },
     { name: 'Mes', value: mes, type: self.model.types.STRING },
     { name: 'IdSucursal', value: idSucursal, type: self.model.types.STRING },
-    { name: 'MSucursal', value: idSucursal, type: self.model.types.STRING },
+    { name: 'MSucursal', value: mSucursal, type: self.model.types.STRING },
     { name: 'Departamento', value: departamento, type: self.model.types.STRING },
-    { name: 'Concepto', value: concepto, type: self.model.types.STRING }
+    { name: 'Concepto', value: concepto, type: self.model.types.STRING },
+    { name: 'IdEstadoDeResultado', value: idEstadoResultado, type: self.model.types.STRING }
   ];
 
   this.model.query('SP_ESTADO_DE_RESULTADOS_DETALLE_MENSUAL', params, function (error, result) {

@@ -121,7 +121,7 @@ export class InternosComponent implements OnInit {
       this.getEfectivoSituacion();
     }
     else if (sCompania !== '0') {
-      this.showReporteUnidades = true;
+      this.hideDetalles();
       this.showEfectivoSituacion = false;
       this.getResultadoUnidades();
       this.getEstadoResultados();
@@ -246,7 +246,7 @@ export class InternosComponent implements OnInit {
       error => this.errorMessage = <any>error);
   }
 
-  getDetalleResultadosMensual(concepto: string): void {
+  getDetalleResultadosMensual(concepto: string, idEstadoResultado: number): void {
     //Este servicio requiere el Id de la sucursal con un cero a la izquierda
     this._service.getDetalleResultadosMensual({
       idAgencia: this.selectedCompania,
@@ -255,12 +255,16 @@ export class InternosComponent implements OnInit {
       idSucursal: this.selectedIdSucursal >= 0 ? '0' + this.selectedIdSucursal.toString() : '00',
       mSucursal: this.selectedSucursal,
       departamento: this.selectedDepartamento,
-      concepto: concepto
+      concepto: concepto,
+      idEstadoDeResultado: idEstadoResultado
     })
       .subscribe(detalleResultadosMensual => {
         this.detalleResultadosMensual = detalleResultadosMensual;
       },
-      error => this.errorMessage = <any>error);
+      error => {
+        this.errorMessage = <any>error;
+        this.detalleResultadosMensual = [];
+      });
   }
 
   getEfectivoSituacion(): void {
@@ -341,12 +345,12 @@ export class InternosComponent implements OnInit {
     this.getDetalleUnidadesMensual(this.detalleUnidadesConcepto);
   }
 
-  onClickResultado(i: number, value: number, name: string) {
+  onClickResultado(i: number, value: number, name: string, idEstadoResultado) {
     this.showDetallePrimerNivel = true;
     this.detalleName = name;
     this.detalleValue = value;
     this.detalleConcepto = this.estadoResultados[i].Concepto;
-    this.getDetalleResultadosMensual(this.detalleConcepto);
+    this.getDetalleResultadosMensual(this.detalleConcepto, idEstadoResultado);
   }
 
   onClickDetalleSegundoNivel(i: number, value: number, name: string) {
@@ -355,7 +359,15 @@ export class InternosComponent implements OnInit {
     this.showDetalleSegundoNivel = true;
     this.detalleNameSegundoNivel = name;
     this.detalleValueSegundoNivel = value;
-    this.detalleConceptoSegundoNivel = 'Ventas...';
+    this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Concepto;
+  }
+
+  hideDetalles(): void {
+    this.showResultados = true;
+    this.showUnidades = true;
+    this.showDetalleUnidadesPrimerNivel = false;
+    this.showDetalleSegundoNivel = false;
+    this.showDetallePrimerNivel = false;
   }
 
   hideDetalleUnidadesPrimerNivel(): void {
