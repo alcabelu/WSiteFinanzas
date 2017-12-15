@@ -67,6 +67,7 @@ export class InternosComponent implements OnInit {
   tipoReporte: ITipoReporte[];
   detalleUnidadesMensual: IDetalleUnidadesMensual[];
   detalleResultadosMensual: IDetalleResultadosMensual[];
+  resultadoUnidades: IResultadoInternos[] = [];
   selectedCompania = 0;
   selectedTipoReporte = 1;
   selectedSucursal = 'AA';
@@ -87,7 +88,20 @@ export class InternosComponent implements OnInit {
   detalleValueSegundoNivel: number;
   detalleConceptoSegundoNivel: string;
 
-  resultadoUnidades: IResultadoInternos[] = [];
+  valuesNegritas = [
+    'Utilidad Bruta',
+    'Utilidad Bruta Neta',
+    'EBITDA',
+    'Utilidad (Pérdida) de Operación',
+    'RIF',
+    'Utilidad (Pérdida) antes de Imp a la Utilidad',
+    'Utilidad (Pérdida) Neta',
+    'ROS',
+    'Rotación CxC',
+    'Rotación de Inventarios',
+    'Rotación de CXP',
+    'Neto'
+  ];
 
   ngOnInit() {
     this.setDefaultDate();
@@ -277,6 +291,11 @@ export class InternosComponent implements OnInit {
         this.efectivoSituacion = efectivoSituacion;
       },
       error => this.errorMessage = <any>error);
+  }
+
+  //Revisa si la cadena debe ir en negrita
+  shouldBeBold(value: string): boolean {
+    return this.valuesNegritas.includes(value);
   }
 
   onChangePeriodo(selectedDate): void {

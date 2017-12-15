@@ -235,43 +235,43 @@
           </thead>
           <tbody>
             <ng-container *ngFor='let r of estadoResultados; let i = index;'>
-              <tr [ngClass]="{'font-weight-bold': i === 2 || i === 4 || i === 8 || i === 10 || i === 15 || i === 19 || i === 21 || i === 22 || i === 23 || i === 24 || i === 25 || i === 26}">
+              <tr [ngClass]="{'font-weight-bold': shouldBeBold(r.Concepto)}">
                 <td class="col-width-concepto">{{ r.Concepto }}</td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Real, 'Real', 1)">
-                  {{ r.Real | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.Real | percent:'1.2-2') : (r.Real | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.Perc1 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.Perc1 | percent:'1.2-2') : (r.Perc1 | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.PPto, 'PPto', 2)">
-                  {{ r.PPto | number:'1.2-2'}}
+                  {{ r.Concepto === 'ROS' ? (r.PPto | percent:'1.2-2') : (r.PPto | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.Perc2 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.Perc2 | percent:'1.2-2') : (r.Perc2 | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Variacion, 'Variacion', 3)">
-                  {{ r.Variacion | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.Variacion | percent:'1.2-2') : (r.Variacion | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.Perc3 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.Perc3 | percent:'1.2-2') : (r.Perc3 | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcReal, 'AcReal', 4)">
-                  {{ r.AcReal | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcReal | percent:'1.2-2') : (r.AcReal | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.AcPerc1 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcPerc1 | percent:'1.2-2') : (r.AcPerc1 | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcPPto, 'AcPPto', 5)">
-                  {{ r.AcPPto | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcPPto | percent:'1.2-2') : (r.AcPPto | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.AcPerc2 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcPerc2 | percent:'1.2-2') : (r.AcPerc2 | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcVariacion, 'AcVariacion', 6)">
-                  {{ r.AcVariacion | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcVariacion | percent:'1.2-2') : (r.AcVariacion | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
-                  {{ r.AcPerc3 | number:'1.2-2' }}
+                  {{ r.Concepto === 'ROS' ? (r.AcPerc3 | percent:'1.2-2') : (r.AcPerc3 | number:'1.2-2') }}
                 </td>
               </tr>
             </ng-container>
@@ -297,7 +297,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor='let drm of detalleResultadosMensual; let i = index;'>
+              <tr *ngFor='let drm of detalleResultadosMensual; let i = index;'
+                  [ngClass]="{'font-weight-bold': shouldBeBold(drm.Concepto)}">
                 <td class="col-md-3">{{ drm.Concepto }}</td>
                 <td class="col-md-3">{{ drm.Numcta }}</td>
                 <td class="col-md-3">{{ drm.Descr }}</td>
