@@ -212,6 +212,7 @@ internos.prototype.get_detalleresultadosmensual = function (req, res, next) {
   var departamento = req.query.departamento;
   var concepto = req.query.concepto;
   var idEstadoResultado = req.query.idEstadoDeResultado;
+  var idDetalle = req.query.idDetalle;
 
   var params = [
     { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
@@ -221,10 +222,11 @@ internos.prototype.get_detalleresultadosmensual = function (req, res, next) {
     { name: 'MSucursal', value: mSucursal, type: self.model.types.STRING },
     { name: 'Departamento', value: departamento, type: self.model.types.STRING },
     { name: 'Concepto', value: concepto, type: self.model.types.STRING },
-    { name: 'IdEstadoDeResultado', value: idEstadoResultado, type: self.model.types.STRING }
+    { name: 'IdEstadoDeResultado', value: idEstadoResultado, type: self.model.types.STRING },
+    { name: 'IdDetalle', value: idDetalle, type: self.model.types.STRING }
   ];
 
-  this.model.query('SP_ESTADO_DE_RESULTADOS_DETALLE_MENSUAL', params, function (error, result) {
+  this.model.query('SP_ESTADO_DE_RESULTADOS_DETALLE', params, function (error, result) {
     console.log(params);
     self.view.expositor(res, {
       error: error,
@@ -232,6 +234,34 @@ internos.prototype.get_detalleresultadosmensual = function (req, res, next) {
     });
   });
 };
+
+// /api/internos/detalleresultadoscuentas
+// Funcionalidad para detalle de Estado de Resultados mensual (doble click celdas de lado azul)
+internos.prototype.get_detalleresultadoscuentas = function (req, res, next) {
+  var self = this;
+  var servidorAgencia = req.query.servidoragencia;
+  var concentradora = req.query.concentradora;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var numCta = req.query.numcta;
+
+  var params = [
+    { name: 'ServidorAgencia', value: servidorAgencia, type: self.model.types.STRING },
+    { name: 'Concentradora', value: concentradora, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'NumCta', value: numCta, type: self.model.types.STRING }
+  ];
+
+  this.model.query('SP_ESTADO_DE_RESULTADOS_DETALLE_CUENTAS', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
+
 
 // /api/internos/efectivoysituacion
 // Funcionalidad para las opciones de efectivo real y situacion financiera

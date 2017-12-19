@@ -7,5 +7,6 @@ export interface ISucursal {
   MSUC: string,
   Alias: string,
   HyO: string,
-  Tipo: string
+  Tipo: string,
+  Concentradora: string
 }

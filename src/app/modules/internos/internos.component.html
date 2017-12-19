@@ -237,37 +237,37 @@
             <ng-container *ngFor='let r of estadoResultados; let i = index;'>
               <tr [ngClass]="{'font-weight-bold': shouldBeBold(r.Concepto)}">
                 <td class="col-width-concepto">{{ r.Concepto }}</td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Real, 'Real', 1)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Real, 'Real', 1, 1)">
                   {{ r.Concepto === 'ROS' ? (r.Real | percent:'1.2-2') : (r.Real | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Concepto === 'ROS' ? (r.Perc1 | percent:'1.2-2') : (r.Perc1 | number:'1.2-2') }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.PPto, 'PPto', 2)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.PPto, 'PPto', 2, 1)">
                   {{ r.Concepto === 'ROS' ? (r.PPto | percent:'1.2-2') : (r.PPto | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Concepto === 'ROS' ? (r.Perc2 | percent:'1.2-2') : (r.Perc2 | number:'1.2-2') }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Variacion, 'Variacion', 3)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.Variacion, 'Variacion', 3, 1)">
                   {{ r.Concepto === 'ROS' ? (r.Variacion | percent:'1.2-2') : (r.Variacion | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Concepto === 'ROS' ? (r.Perc3 | percent:'1.2-2') : (r.Perc3 | number:'1.2-2') }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcReal, 'AcReal', 4)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcReal, 'AcReal', 1, 2)">
                   {{ r.Concepto === 'ROS' ? (r.AcReal | percent:'1.2-2') : (r.AcReal | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Concepto === 'ROS' ? (r.AcPerc1 | percent:'1.2-2') : (r.AcPerc1 | number:'1.2-2') }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcPPto, 'AcPPto', 5)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcPPto, 'AcPPto', 2, 2)">
                   {{ r.Concepto === 'ROS' ? (r.AcPPto | percent:'1.2-2') : (r.AcPPto | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
                   {{ r.Concepto === 'ROS' ? (r.AcPerc2 | percent:'1.2-2') : (r.AcPerc2 | number:'1.2-2') }}
                 </td>
-                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcVariacion, 'AcVariacion', 6)">
+                <td class="text-right col-width-cantidad" (click)="onClickResultado(i, r.AcVariacion, 'AcVariacion', 3, 2)">
                   {{ r.Concepto === 'ROS' ? (r.AcVariacion | percent:'1.2-2') : (r.AcVariacion | number:'1.2-2') }}
                 </td>
                 <td class="text-right col-width-perc">
@@ -287,7 +287,7 @@
             <b>Concepto:</b> <span class="badge badge-pill badge-success">{{ detalleConcepto }}</span>
             <b>{{ detalleName }}:</b> <span class="badge badge-pill badge-success">{{ detalleValue | number:'1.2-2' }}</span>
           </p>
-          <table class="table table-sm table-bordered table-fixed table-hover-td">
+          <table *ngIf='idDetalle === 1' class="table table-sm table-bordered table-fixed table-hover-td">
             <thead>
               <tr>
                 <th class="bg-secondary text-white col-md-3">Concepto</th>
@@ -303,6 +303,58 @@
                 <td class="col-md-3">{{ drm.Numcta }}</td>
                 <td class="col-md-3">{{ drm.Descr }}</td>
                 <td class="col-md-3 text-right" (click)="onClickDetalleSegundoNivel(i, drm.SaldoMes, 'Saldomes')">{{ drm.SaldoMes | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table *ngIf='idDetalle === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll">
+            <thead>
+              <tr>
+                <th class="bg-secondary text-white min-width-220">Concepto</th>
+                <th class="bg-secondary text-white min-width-135">No.Cuenta</th>
+                <th class="bg-secondary text-white min-width-220">Descripción</th>
+                <th class="bg-secondary text-white">ENE</th>
+                <th class="bg-secondary text-white">FEB</th>
+                <th class="bg-secondary text-white">MAR</th>
+                <th class="bg-secondary text-white">ABR</th>
+                <th class="bg-secondary text-white">MAY</th>
+                <th class="bg-secondary text-white">JUN</th>
+                <th class="bg-secondary text-white">JUL</th>
+                <th class="bg-secondary text-white">AGO</th>
+                <th class="bg-secondary text-white">SEP</th>
+                <th class="bg-secondary text-white">OCT</th>
+                <th class="bg-secondary text-white">NOV</th>
+                <th class="bg-secondary text-white">DIC</th>
+                <th class="bg-secondary text-white">SUMA</th>
+                <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Real</th>
+                <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Presupuesto</th>
+                <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Variacion</th>
+                <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white"> % </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor='let drm of detalleResultadosMensual; let i = index;'
+                  [ngClass]="{'font-weight-bold': shouldBeBold(drm.Concepto)}">
+                <td class="">{{ drm.Concepto }}</td>
+                <td class="">{{ drm.Numcta }}</td>
+                <td class="">{{ drm.Descr }}</td>
+                <td class="text-right">{{ drm.Ene | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Feb | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Mar | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Abr | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.May | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Jun | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Jul | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Ago | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Sep | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Oct | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Nov | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Dic | number:'1.2-2' }}</td>
+                <td class="text-right">{{ drm.Suma | number:'1.2-2' }}</td>
+                <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Real | number:'1.2-2' }}</td>
+                <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Pspsto | number:'1.2-2' }}</td>
+                <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Variacion | number:'1.2-2' }}</td>
+                <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Pct | number:'1.2-2' }}</td>
               </tr>
             </tbody>
           </table>
@@ -324,161 +376,26 @@
           <table class="table table-sm table-bordered table-fixed">
               <thead>
                 <tr>
-                  <th class="bg-orange text-white col-md-4">No. Cuenta</th>
-                  <th class="bg-orange text-white col-md-4">Descripción</th>
-                  <th class="bg-orange text-white col-md-4">Saldo Mensual</th>
+                  <th class="bg-orange text-white col-md-1">TIPOPOL</th>
+                  <th class="bg-orange text-white col-md-1">CONSPOL</th>
+                  <th class="bg-orange text-white col-md-1">CONSMOV</th>
+                  <th class="bg-orange text-white col-md-1">MES</th>
+                  <th class="bg-orange text-white col-md-2">NUMCTA</th>
+                  <th class="bg-orange text-white col-md-4">CONCEPTO</th>
+                  <th class="bg-orange text-white col-md-1">DEBE</th>
+                  <th class="bg-orange text-white col-md-1">HABER</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">431,017.25</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">1,599,068.97</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0002-0005</td>
-                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">1,172,719.03</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0001</td>
-                  <td class="col-md-4">Ventas de SWIFT GA</td>
-                  <td class="col-md-4">3,735,983.92</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">230,445.54</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">2,629,198.29</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4602-0030-0006-0005</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">-22,606.89</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4603-0030-0001-0090</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
-                  <td class="col-md-4">-101,803.54</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">431,017.25</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">1,599,068.97</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0002-0005</td>
-                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">1,172,719.03</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0001</td>
-                  <td class="col-md-4">Ventas de SWIFT GA</td>
-                  <td class="col-md-4">3,735,983.92</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">230,445.54</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">2,629,198.29</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4602-0030-0006-0005</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">-22,606.89</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4603-0030-0001-0090</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
-                  <td class="col-md-4">-101,803.54</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">431,017.25</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0001-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">1,599,068.97</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0002-0005</td>
-                  <td class="col-md-4">Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">1,172,719.03</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0001</td>
-                  <td class="col-md-4">Ventas de SWIFT GA</td>
-                  <td class="col-md-4">3,735,983.92</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0008</td>
-                  <td class="col-md-4">Ventas de S-CROSS GL </td>
-                  <td class="col-md-4">855,547.61</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0014</td>
-                  <td class="col-md-4">Ventas de CIAZ</td>
-                  <td class="col-md-4">230,445.54</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4003-0030-0003-0015</td>
-                  <td class="col-md-4">VENTAS DE IGNIS GLX</td>
-                  <td class="col-md-4">2,629,198.29</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4602-0030-0006-0005</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas de NUEVA VITARA</td>
-                  <td class="col-md-4">-22,606.89</td>
-                </tr>
-                <tr>
-                  <td class="col-md-4">4603-0030-0001-0090</td>
-                  <td class="col-md-4">Dev.Desc. s/ Ventas/Otras vtas</td>
-                  <td class="col-md-4">-101,803.54</td>
+                <tr *ngFor='let drc of detalleResultadosCuentas'>
+                  <td class="col-md-1">{{ drc.MOV_TIPOPOL }}</td>
+                  <td class="col-md-1 text-center">{{ drc.MOV_CONSPOL }}</td>
+                  <td class="col-md-1 text-center">{{ drc.MOV_CONSMOV }}</td>
+                  <td class="col-md-1 text-center">{{ drc.MOV_MES }}</td>
+                  <td class="col-md-2">{{ drc.MOV_NUMCTA }}</td>
+                  <td class="col-md-4">{{ drc.MOV_CONCEPTO }}</td>
+                  <td class="col-md-1 text-right">{{ drc.MOV_DEBE }}</td>
+                  <td class="col-md-1 text-right">{{ drc.MOV_HABER }}</td>
                 </tr>
               </tbody>
             </table>

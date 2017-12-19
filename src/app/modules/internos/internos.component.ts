@@ -14,6 +14,7 @@ import { ITipoReporte } from './tipo-reporte';
 import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
+import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
 
 @Component({
   selector: 'app-internos',
@@ -67,16 +68,22 @@ export class InternosComponent implements OnInit {
   tipoReporte: ITipoReporte[];
   detalleUnidadesMensual: IDetalleUnidadesMensual[];
   detalleResultadosMensual: IDetalleResultadosMensual[];
+  detalleResultadosCuentas: IDetalleResultadosCuentas[];
   resultadoUnidades: IResultadoInternos[] = [];
   selectedCompania = 0;
   selectedTipoReporte = 1;
   selectedSucursal = 'AA';
   selectedIndexSucursal = 0;
   selectedIdSucursal = -3; //El servicio SP_CONSULTA_SUCURSAL regresa varios valores, estamos usando IdSucursal y MSUC
+  selectedIpSucursal = '';
+  selectedConcentradora = '';
   selectedDepartamento = 'Todos';
   mes: string;
   anio: string;
   periodo: string;
+  //Control de sp SP_ESTADO_DE_RESULTADOS_DETALLE
+  idDetalle: number;
+  idEstadoResultado: number;
 
   detalleUnidadesConcepto: string;
   detalleUnidadesName: string;
@@ -201,10 +208,11 @@ export class InternosComponent implements OnInit {
       idTipoReporte: this.selectedTipoReporte,
       idAgencia: this.selectedCompania
     })
-      .subscribe(sucursales => {
-        this.sucursales = sucursales;
-      },
-      error => this.errorMessage = <any>error);
+      .subscribe(
+        sucursales => { this.sucursales = sucursales; },
+        error => { this.errorMessage = <any>error },
+        () => { this.onChangeSucursal(0); }
+      );
   }
 
   getDepartamentos(): void {
@@ -260,7 +268,7 @@ export class InternosComponent implements OnInit {
       error => this.errorMessage = <any>error);
   }
 
-  getDetalleResultadosMensual(concepto: string, idEstadoResultado: number): void {
+  getDetalleResultadosMensual(concepto: string): void {
     //Este servicio requiere el Id de la sucursal con un cero a la izquierda
     this._service.getDetalleResultadosMensual({
       idAgencia: this.selectedCompania,
@@ -270,7 +278,9 @@ export class InternosComponent implements OnInit {
       mSucursal: this.selectedSucursal,
       departamento: this.selectedDepartamento,
       concepto: concepto,
-      idEstadoDeResultado: idEstadoResultado
+      idEstadoDeResultado: this.idEstadoResultado,
+      idDetalle: this.idDetalle,
+      idEstadoResultado: this.idEstadoResultado
     })
       .subscribe(detalleResultadosMensual => {
         this.detalleResultadosMensual = detalleResultadosMensual;
@@ -279,6 +289,23 @@ export class InternosComponent implements OnInit {
         this.errorMessage = <any>error;
         this.detalleResultadosMensual = [];
       });
+  }
+
+  getDetalleResultadosCuentas(numCta: string): void {
+    this._service.getDetalleResultadosCuentas({
+      servidorAgencia: this.selectedIpSucursal,
+      concentradora: this.selectedConcentradora,
+      anio: this.anio,
+      mes: this.mes,
+      numCta: numCta
+    })
+      .subscribe(
+        detalleResultadosCuentas => { this.detalleResultadosCuentas = detalleResultadosCuentas; },
+        error => {
+          this.errorMessage = <any>error;
+          this.detalleResultadosCuentas = [];
+        }
+      );
   }
 
   getEfectivoSituacion(): void {
@@ -329,6 +356,8 @@ export class InternosComponent implements OnInit {
     const sucursal = this.sucursales[selectedIndex];
     this.selectedSucursal = sucursal.MSUC;
     this.selectedIdSucursal = sucursal.IdSucursal;
+    this.selectedIpSucursal = sucursal.Servidor;
+    this.selectedConcentradora = sucursal.Concentradora;
 
     if(this.periodo && this.selectedCompania !== 0 && this.selectedSucursal) {
       this.getDepartamentos();
@@ -364,12 +393,14 @@ export class InternosComponent implements OnInit {
     this.getDetalleUnidadesMensual(this.detalleUnidadesConcepto);
   }
 
-  onClickResultado(i: number, value: number, name: string, idEstadoResultado) {
+  onClickResultado(i: number, value: number, name: string, idEstadoResultado: number, idDetalle: number) {
     this.showDetallePrimerNivel = true;
     this.detalleName = name;
     this.detalleValue = value;
     this.detalleConcepto = this.estadoResultados[i].Concepto;
-    this.getDetalleResultadosMensual(this.detalleConcepto, idEstadoResultado);
+    this.idDetalle = idDetalle;
+    this.idEstadoResultado = idEstadoResultado
+    this.getDetalleResultadosMensual(this.detalleConcepto);
   }
 
   onClickDetalleSegundoNivel(i: number, value: number, name: string) {
@@ -379,6 +410,7 @@ export class InternosComponent implements OnInit {
     this.detalleNameSegundoNivel = name;
     this.detalleValueSegundoNivel = value;
     this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Concepto;
+    this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta);
   }
 
   hideDetalles(): void {

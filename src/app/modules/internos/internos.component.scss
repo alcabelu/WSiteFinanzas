@@ -29,6 +29,14 @@
   width: 6.5%;
 }
 
+.min-width-220 {
+  min-width: 220px;
+}
+
+.min-width-135 {
+  min-width: 135px;
+}
+
 .btn-vm, {
   line-height: 1;
 }
@@ -81,4 +89,10 @@
       }
     }
   }
+}
+
+//Tabla con doble scroll
+.table-double-scroll {
+  height: 300px;
+  overflow-y: auto;
 }
