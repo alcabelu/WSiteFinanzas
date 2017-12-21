@@ -52,6 +52,13 @@
   right:0;
 }
 
+.breadcrumb {
+  font-size: 0.95rem;
+  background-color: #fff;
+  line-height: 1.0;
+  padding: 0px;
+}
+
 //Tabla con celdas hover
 .table-hover-td tbody td:hover {
   background-color: rgba(0,0,0,.075);
@@ -60,6 +67,11 @@
 
 .bg-orange {
   background-color: #ff6600 !important;
+}
+
+.breadcrumb-item.active {
+  color: #343a40;
+  font-weight: bold;
 }
 
 //Tabla con encabezados fixed

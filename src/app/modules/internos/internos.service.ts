@@ -12,6 +12,7 @@ import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
+import { ITipoUnidad } from './tipo-unidad';
 
 @Injectable()
 export class InternosService {
@@ -24,6 +25,7 @@ export class InternosService {
   private _urlUnidadesDepartamento = 'api/internos/unidadesdepto';
   private _urlEfectivoSituacion = 'api/internos/efectivoysituacion';
   private _urlDetalleUnidadesMensual = 'api/internos/detalleunidadesmensual';
+  private _urlDetalleUnidadesTipo = 'api/internos/detalleunidadestipo';
   private _urlDetalleResultadosMensual = 'api/internos/detalleresultadosmensual';
   private _urlDetalleResultadosCuentas = 'api/internos/detalleresultadoscuentas';
 
@@ -130,7 +132,23 @@ export class InternosService {
     Params = Params.append('concepto', parameters.concepto);
 
     return this._http.get<IDetalleUnidadesMensual[]>(this._urlDetalleUnidadesMensual, { params: Params })
-      // .do(data => console.log('All:' + JSON.stringify(data)))
+      .catch(this.handleError);
+  }
+
+  getDetalleUnidadesTipo(parameters): Observable<ITipoUnidad[]> {
+    // Initialize Params Object
+    let Params = new HttpParams();
+
+    // Begin assigning parameters
+    Params = Params.append('idcia', parameters.idAgencia);
+    Params = Params.append('msuc', parameters.mSucursal);
+    Params = Params.append('anio', parameters.anio);
+    Params = Params.append('mes', parameters.mes);
+    Params = Params.append('departamento', parameters.departamento);
+    Params = Params.append('carline', parameters.carLine);
+    Params = Params.append('tipoauto', parameters.tipoAuto);
+
+    return this._http.get<ITipoUnidad[]>(this._urlDetalleUnidadesTipo, { params: Params })
       .catch(this.handleError);
   }
 

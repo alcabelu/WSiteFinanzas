@@ -15,6 +15,7 @@ import { IEfectivoSituacion } from './efectivo-y-situacion-financiera';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
+import { ITipoUnidad } from './tipo-unidad';
 
 @Component({
   selector: 'app-internos',
@@ -56,6 +57,7 @@ export class InternosComponent implements OnInit {
   showDetalleUnidadesPrimerNivel = false;
   showDetallePrimerNivel = false;
   showDetalleSegundoNivel = false;
+  showDetalleUnidadesSegundoNivel = false;
   isCollapsed = true;
 
   resultadoUnidadesService: IResultadoInternos[] = [];
@@ -67,10 +69,12 @@ export class InternosComponent implements OnInit {
   departamentos: IDepartamento[] = [];
   tipoReporte: ITipoReporte[];
   detalleUnidadesMensual: IDetalleUnidadesMensual[];
+  detalleUnidadesTipo: ITipoUnidad[];
   detalleResultadosMensual: IDetalleResultadosMensual[];
   detalleResultadosCuentas: IDetalleResultadosCuentas[];
   resultadoUnidades: IResultadoInternos[] = [];
   selectedCompania = 0;
+  selectedNombreCompania: string;
   selectedTipoReporte = 1;
   selectedSucursal = 'AA';
   selectedIndexSucursal = 0;
@@ -88,6 +92,9 @@ export class InternosComponent implements OnInit {
   detalleUnidadesConcepto: string;
   detalleUnidadesName: string;
   detalleUnidadesValue: number;
+  detalleUnidadesConceptoSegundoNivel: string;
+  detalleUnidadesNameSegundoNivel: string;
+  detalleUnidadesValueSegundoNivel: string;
   detalleName: string;
   detalleValue: number;
   detalleConcepto: string;
@@ -147,6 +154,10 @@ export class InternosComponent implements OnInit {
       this.getResultadoUnidades();
       this.getEstadoResultados();
       this.getUnidadesDepartamento();
+
+      //Actualizar info de breadcrumb
+      const a = this.companias.find(x => x.ID == this.selectedCompania);
+      this.selectedNombreCompania = a.NOMBRE;
     }
   }
 
@@ -197,10 +208,9 @@ export class InternosComponent implements OnInit {
 
   getCompanias(): void {
     this._service.getCompanias({ idUsuario: 3 })
-      .subscribe(companias => {
-        this.companias = companias;
-      },
-      error => this.errorMessage = <any>error);
+      .subscribe(
+        companias => { this.companias = companias; },
+        error => this.errorMessage = <any>error);
   }
 
   getSucursales(): void {
@@ -223,10 +233,11 @@ export class InternosComponent implements OnInit {
       anio: this.anio,
       mes: this.mes
     })
-      .subscribe(departamentos => {
-        this.departamentos = departamentos;
-      },
-      error => this.errorMessage = <any>error);
+      .subscribe(
+        departamentos => { this.departamentos = departamentos; },
+        error => this.errorMessage = <any>error,
+        () => this.procesar()
+      );
   }
 
   setTipoReporte(): void {
@@ -268,6 +279,28 @@ export class InternosComponent implements OnInit {
       error => this.errorMessage = <any>error);
   }
 
+  getDetalleUnidadesTipo(carLine: string, tipoAuto: string = ''): void {
+    // Se usa como parametro de departamento el texto de Concepto del primer nivel,
+    // sin las letras N o S que se le agregan al inicio
+    let concepto = this.detalleUnidadesConcepto;
+    if (concepto.startsWith('N ')) concepto = concepto.substr(2);
+    else if (concepto.startsWith('S ')) concepto = concepto.substr(2);
+
+    this._service.getDetalleUnidadesTipo({
+      idAgencia: this.selectedCompania,
+      mSucursal: this.selectedSucursal,
+      anio: this.anio,
+      mes: this.mes,
+      departamento: concepto,
+      carLine: carLine,
+      tipoAuto: tipoAuto
+    })
+      .subscribe(detalleUnidadesTipo => {
+        this.detalleUnidadesTipo = detalleUnidadesTipo;
+      },
+      error => this.errorMessage = <any>error);
+  }
+
   getDetalleResultadosMensual(concepto: string): void {
     //Este servicio requiere el Id de la sucursal con un cero a la izquierda
     this._service.getDetalleResultadosMensual({
@@ -291,12 +324,12 @@ export class InternosComponent implements OnInit {
       });
   }
 
-  getDetalleResultadosCuentas(numCta: string): void {
+  getDetalleResultadosCuentas(numCta: string, mes: string = ''): void {
     this._service.getDetalleResultadosCuentas({
       servidorAgencia: this.selectedIpSucursal,
       concentradora: this.selectedConcentradora,
       anio: this.anio,
-      mes: this.mes,
+      mes:  mes === '' ? this.mes : mes, //Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
       numCta: numCta
     })
       .subscribe(
@@ -339,15 +372,15 @@ export class InternosComponent implements OnInit {
     }
   }
 
-  onChangeCompania(newValue): void {
+  onChangeCompania(newValue: number): void {
     this.selectedCompania = newValue;
 
     if (this.selectedCompania !== 0 && this.selectedTipoReporte) {
       //Llenar dropdown de sucursales
-        this.getSucursales();
+      this.getSucursales();
     }
 
-    if(this.periodo && this.selectedCompania !== 0 && this.selectedSucursal) {
+    if (this.periodo && this.selectedCompania !== 0 && this.selectedSucursal) {
       this.getDepartamentos();
     }
   }
@@ -366,7 +399,6 @@ export class InternosComponent implements OnInit {
 
   onChangeDepartamento(newValue): void {
     this.selectedDepartamento = newValue;
-    console.log(newValue);
   }
 
   onChangeTipoReporte(newValue: number): void {
@@ -386,11 +418,27 @@ export class InternosComponent implements OnInit {
   }
 
   onClickUnidades(i: number, value: number, name: string) {
-    this.showDetalleUnidadesPrimerNivel = true;
-    this.detalleUnidadesName = name;
-    this.detalleUnidadesValue = value;
-    this.detalleUnidadesConcepto = this.resultadoUnidades[i].Concepto;
-    this.getDetalleUnidadesMensual(this.detalleUnidadesConcepto);
+    const concepto = this.resultadoUnidades[i].Concepto;
+
+    if (concepto !== 'Total Unidades') {
+      this.showDetalleUnidadesPrimerNivel = true;
+      this.detalleUnidadesName = name;
+      this.detalleUnidadesValue = value;
+      this.detalleUnidadesConcepto = concepto;
+      this.getDetalleUnidadesMensual(concepto);
+    }
+  }
+
+  onClickUnidadesSegundoNivel(i: number, value: string, name: string) {
+    if (value.trim() !== 'Total') {
+      this.showUnidades = false;
+      this.showDetalleUnidadesPrimerNivel = false;
+      this.showDetalleUnidadesSegundoNivel = true;
+      this.detalleUnidadesNameSegundoNivel = name;
+      this.detalleUnidadesValueSegundoNivel = value;
+      this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesMensual[i].CarLine;
+      this.getDetalleUnidadesTipo(this.detalleUnidadesMensual[i].CarLine);
+    }
   }
 
   onClickResultado(i: number, value: number, name: string, idEstadoResultado: number, idDetalle: number) {
@@ -403,28 +451,35 @@ export class InternosComponent implements OnInit {
     this.getDetalleResultadosMensual(this.detalleConcepto);
   }
 
-  onClickDetalleSegundoNivel(i: number, value: number, name: string) {
+  onClickDetalleSegundoNivel(i: number, value: number, name: string, mes: string = '') {
     this.showResultados = false;
     this.showDetallePrimerNivel = false;
     this.showDetalleSegundoNivel = true;
     this.detalleNameSegundoNivel = name;
     this.detalleValueSegundoNivel = value;
-    this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Concepto;
-    this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta);
+    this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Descr;
+    this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta, mes);
   }
 
   hideDetalles(): void {
     this.showResultados = true;
     this.showUnidades = true;
     this.showDetalleUnidadesPrimerNivel = false;
-    this.showDetalleSegundoNivel = false;
+    this.showDetalleUnidadesSegundoNivel = false;
     this.showDetallePrimerNivel = false;
+    this.showDetalleSegundoNivel = false;
   }
 
   hideDetalleUnidadesPrimerNivel(): void {
     this.showUnidades = true;
-    // this.showDetalleUnidadesSegundoNivel = false;
+    this.showDetalleUnidadesSegundoNivel = false;
     this.showDetalleUnidadesPrimerNivel = false;
+  }
+
+  hideDetalleUnidadesSegundoNivel(): void {
+    this.showUnidades = false;
+    this.showDetalleUnidadesSegundoNivel = false;
+    this.showDetalleUnidadesPrimerNivel = true;
   }
 
   hideDetallePrimerNivel(): void {
