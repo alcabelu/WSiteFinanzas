@@ -82,6 +82,8 @@ export class InternosComponent implements OnInit {
   selectedIpSucursal = '';
   selectedConcentradora = '';
   selectedDepartamento = 'Todos';
+  detalleResultadosMensualScroll = false;
+  detalleResultadosCuentasScroll = false;
   mes: string;
   anio: string;
   periodo: string;
@@ -321,7 +323,10 @@ export class InternosComponent implements OnInit {
       error => {
         this.errorMessage = <any>error;
         this.detalleResultadosMensual = [];
-      });
+      },
+      //Si la lista tiene más de 10 resultados se necesita ajustar el ancho de tabla para que quepa el scroll
+      () => {this.detalleResultadosMensualScroll = this.detalleResultadosMensual.length <= 10 ? true : false;}
+    );
   }
 
   getDetalleResultadosCuentas(numCta: string, mes: string = ''): void {
@@ -337,7 +342,9 @@ export class InternosComponent implements OnInit {
         error => {
           this.errorMessage = <any>error;
           this.detalleResultadosCuentas = [];
-        }
+        },
+        //Si la lista tiene más de 10 resultados se necesita ajustar el ancho de tabla para que quepa el scroll
+        () => {this.detalleResultadosCuentasScroll = this.detalleResultadosCuentas.length <= 10 ? true : false;}
       );
   }
 
@@ -452,13 +459,16 @@ export class InternosComponent implements OnInit {
   }
 
   onClickDetalleSegundoNivel(i: number, value: number, name: string, mes: string = '') {
-    this.showResultados = false;
-    this.showDetallePrimerNivel = false;
-    this.showDetalleSegundoNivel = true;
-    this.detalleNameSegundoNivel = name;
-    this.detalleValueSegundoNivel = value;
-    this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Descr;
-    this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta, mes);
+    //validar que solo entre cuando viene de real (excluir Ppto y Variacion)
+    if (this.detalleName === 'Real' || this.detalleName === 'AcReal') {
+      this.showResultados = false;
+      this.showDetallePrimerNivel = false;
+      this.showDetalleSegundoNivel = true;
+      this.detalleNameSegundoNivel = name;
+      this.detalleValueSegundoNivel = value;
+      this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Descr;
+      this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta, mes);
+    }
   }
 
   hideDetalles(): void {

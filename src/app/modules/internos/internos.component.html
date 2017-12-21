@@ -336,7 +336,8 @@
             </ol>
           </nav>
 
-          <table *ngIf='idDetalle === 1' class="table table-sm table-bordered table-fixed table-hover-td">
+          <table *ngIf='idDetalle === 1' class="table table-sm table-bordered table-fixed table-hover-td"
+                  [ngClass]="{'table-without-scroll': detalleResultadosMensualScroll}">
             <thead>
               <tr>
                 <th class="bg-secondary text-white col-md-3">Concepto</th>
@@ -438,7 +439,8 @@
             </ol>
           </nav>
 
-          <table class="table table-sm table-bordered table-fixed">
+          <table class="table table-sm table-bordered table-fixed"
+                 [ngClass]="{'table-without-scroll': detalleResultadosCuentasScroll}">
               <thead>
                 <tr>
                   <th class="bg-orange text-white col-md-1">TIPOPOL</th>
@@ -462,16 +464,6 @@
                   <td class="col-md-1 text-right">{{ drc.MOV_DEBE | number:'1.2-2' }}</td>
                   <td class="col-md-1 text-right">{{ drc.MOV_HABER | number:'1.2-2' }}</td>
                 </tr>
-                <!-- <tr>
-                  <td class="col-md-1">Total</td>
-                  <td class="col-md-1 text-center">{{ getSum(1) }}</td>
-                  <td class="col-md-1 text-center">{{ getSum(2) }}</td>
-                  <td class="col-md-1 text-center">{{ getSum(3) }}</td>
-                  <td class="col-md-2"></td>
-                  <td class="col-md-4"></td>
-                  <td class="col-md-1 text-right">{{ getSum(6) | number:'1.2-2' }}</td>
-                  <td class="col-md-1 text-right">{{ getSum(7) | number:'1.2-2' }}</td>
-                </tr> -->
               </tbody>
             </table>
         </div>
