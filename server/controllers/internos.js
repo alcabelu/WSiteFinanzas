@@ -231,6 +231,32 @@ internos.prototype.get_detalleunidadestipo = function (req, res, next) {
   });
 };
 
+// /api/internos/detalleunidadesacumulado
+// Funcionalidad para detalle de Unidades Acumulado(segundo nivel de unidades)
+internos.prototype.get_detalleunidadesacumulado = function (req, res, next) {
+  var self = this;
+  var idAgencia = req.query.idcia;
+  var mSuc = req.query.msuc;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var departamento = req.query.departamento;
+
+  var params = [
+    { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'MSuc', value: mSuc, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'Departamento', value: departamento, type: self.model.types.STRING },
+  ];
+
+  this.model.query('SP_UNIDADES_REAL_ACUMULADO', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
 
 // /api/internos/detalleresultadosmensual
 // Funcionalidad para detalle de Estado de Resultados mensual (doble click celdas de lado azul)

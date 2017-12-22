@@ -103,7 +103,7 @@
               <td>
                 {{ r.Concepto }}
               </td>
-              <td class="text-center" (click)="onClickUnidades(i, r.Real, 'Real')">
+              <td class="text-center" (click)="onClickUnidades(i, r.Real, 'Real', 1)">
                 {{ r.Real }}
               </td>
               <td class="text-right">{{ r.Perc1 | number:'1.2-2' }}</td>
@@ -111,7 +111,9 @@
               <td class="text-right">{{ r.Perc2 | number:'1.2-2' }}</td>
               <td class="text-center">{{ r.Variacion }}</td>
               <td class="text-right">{{ r.Perc3 | number:'1.2-2' }}</td>
-              <td class="text-center">{{ r.AcReal }}</td>
+              <td class="text-center" (click)="onClickUnidades(i, r.AcReal, 'AcReal', 2)">
+                {{ r.AcReal }}
+              </td>
               <td class="text-right">{{ r.AcPerc1 | number:'1.2-2' }}</td>
               <td class="text-center">{{ r.AcPPto }}</td>
               <td class="text-right">{{ r.AcPerc2 | number:'1.2-2' }}</td>
@@ -134,7 +136,7 @@
             </ol>
           </nav>
 
-          <div class="row justify-content-center">
+          <div *ngIf='idDetalleUnidades === 1' class="row justify-content-center">
             <div class="col-md-6">
               <table class="table table-sm table-bordered table-hover-td">
                 <thead>
@@ -148,7 +150,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor='let d of detalleUnidadesMensual; let i = index;'
-                      (click)='onClickUnidadesSegundoNivel(i, d.CarLine, "TipoUnidades" )'>
+                      (click)='onClickDetalleUnidadesMensual(i, d.CarLine, "TipoUnidades")'>
                     <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ d.Depto }}</td>
                     <td>{{ d.CarLine }}</td>
                     <td class="text-center">{{ d.Cantidad === null ? 0 : d.Cantidad }}</td>
@@ -158,6 +160,75 @@
               </table>
             </div>
           </div>
+
+          <table *ngIf='idDetalleUnidades === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll">
+              <thead>
+                  <tr>
+                    <th *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"' class="bg-secondary text-white min-width-220">Depto</th>
+                    <th class="bg-secondary text-white min-width-135">CarLine</th>
+                    <th class="bg-secondary text-white">ENE</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">FEB</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">MAR</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">ABR</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">MAY</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">JUN</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">JUL</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">AGO</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">SEP</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">OCT</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">NOV</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">DIC</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th class="bg-secondary text-white">TOTAL</th>
+                    <th class="bg-secondary text-white text-center"> % </th>
+                    <!-- <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Real</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor='let dra of detalleUnidadesAcumulado; let i = index;'>
+                    <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ dra.Depto }}</td>
+                    <td>{{ dra.Carline }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Enero", "01")'>{{ dra.Ene }}</td>
+                    <td class="text-right">{{ dra.PtcEne | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Febrero", "02")'>{{ dra.Feb }}</td>
+                    <td class="text-right">{{ dra.PtcFeb | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Marzo", "03")'>{{ dra.Mar }}</td>
+                    <td class="text-right">{{ dra.PtcMar | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Abril", "04")'>{{ dra.Abr }}</td>
+                    <td class="text-right">{{ dra.PtcAbr | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Mayo", "05")'>{{ dra.May }}</td>
+                    <td class="text-right">{{ dra.PtcMay | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Junio", "06")'>{{ dra.Jun }}</td>
+                    <td class="text-right">{{ dra.PtcJun | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Julio", "07")'>{{ dra.Jul }}</td>
+                    <td class="text-right">{{ dra.PtcJul | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Agosto", "08")'>{{ dra.Ago }}</td>
+                    <td class="text-right">{{ dra.PtcAgo | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Septiembre", "09")'>{{ dra.Sep }}</td>
+                    <td class="text-right">{{ dra.PtcSep | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Octubre", "10")'>{{ dra.Oct }}</td>
+                    <td class="text-right">{{ dra.PtcOct | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Noviembre", "11")'>{{ dra.Nov }}</td>
+                    <td class="text-right">{{ dra.PtcNov | number:'1.2-2' }}</td>
+                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Diciembre", "12")'>{{ dra.Dic }}</td>
+                    <td class="text-right">{{ dra.PtcDic | number:'1.2-2' }}</td>
+                    <td class="text-center">{{ dra.TOTAL }}</td>
+                    <td class="text-right">{{ dra.PctTotal | number:'1.2-2' }}</td>
+                    <!-- <td *ngIf='idEstadoResultado === 3' class="text-right">{{ dra.Pct | number:'1.2-2' }}</td> -->
+                  </tr>
+                </tbody>
+          </table>
         </div>
         <!-- END Detalle Unidades Mensual -->
 
@@ -336,7 +407,7 @@
             </ol>
           </nav>
 
-          <table *ngIf='idDetalle === 1' class="table table-sm table-bordered table-fixed table-hover-td"
+          <table *ngIf='idDetalleResultados === 1' class="table table-sm table-bordered table-fixed table-hover-td"
                   [ngClass]="{'table-without-scroll': detalleResultadosMensualScroll}">
             <thead>
               <tr>
@@ -368,7 +439,7 @@
             </tbody>
           </table>
 
-          <table *ngIf='idDetalle === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll">
+          <table *ngIf='idDetalleResultados === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll">
             <thead>
               <tr>
                 <th class="bg-secondary text-white min-width-220">Concepto</th>
@@ -434,6 +505,7 @@
               <li class="breadcrumb-item"><a href="javascript:void(0)" (click)='hideDetalleSegundoNivel()'>{{ detalleConcepto}} ({{ detalleName }})</a></li>
               <li class="breadcrumb-item active">
                 {{ detalleConceptoSegundoNivel }}
+                {{ detalleNameSegundoNivel }}
                 <span class="badge badge-dark">{{ detalleValueSegundoNivel | number:'1.2-2' }}</span>
               </li>
             </ol>
@@ -445,22 +517,18 @@
                 <tr>
                   <th class="bg-orange text-white col-md-1">TIPOPOL</th>
                   <th class="bg-orange text-white col-md-1">CONSPOL</th>
-                  <th class="bg-orange text-white col-md-1">CONSMOV</th>
-                  <th class="bg-orange text-white col-md-1">MES</th>
                   <th class="bg-orange text-white col-md-2">NUMCTA</th>
-                  <th class="bg-orange text-white col-md-4">CONCEPTO</th>
-                  <th class="bg-orange text-white col-md-1">DEBE</th>
-                  <th class="bg-orange text-white col-md-1">HABER</th>
+                  <th class="bg-orange text-white col-md-6">CONCEPTO</th>
+                  <th class="bg-orange text-white col-md-1">CARGO</th>
+                  <th class="bg-orange text-white col-md-1">ABONO</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor='let drc of detalleResultadosCuentas'>
                   <td class="col-md-1">{{ drc.MOV_TIPOPOL }}</td>
                   <td class="col-md-1 text-center">{{ drc.MOV_CONSPOL }}</td>
-                  <td class="col-md-1 text-center">{{ drc.MOV_CONSMOV }}</td>
-                  <td class="col-md-1 text-center">{{ drc.MOV_MES }}</td>
                   <td class="col-md-2">{{ drc.MOV_NUMCTA }}</td>
-                  <td class="col-md-4">{{ drc.MOV_CONCEPTO }}</td>
+                  <td class="col-md-6">{{ drc.MOV_CONCEPTO }}</td>
                   <td class="col-md-1 text-right">{{ drc.MOV_DEBE | number:'1.2-2' }}</td>
                   <td class="col-md-1 text-right">{{ drc.MOV_HABER | number:'1.2-2' }}</td>
                 </tr>

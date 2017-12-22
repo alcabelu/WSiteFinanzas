@@ -16,6 +16,7 @@ import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
 import { ITipoUnidad } from './tipo-unidad';
+import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
 
 @Component({
   selector: 'app-internos',
@@ -69,6 +70,7 @@ export class InternosComponent implements OnInit {
   departamentos: IDepartamento[] = [];
   tipoReporte: ITipoReporte[];
   detalleUnidadesMensual: IDetalleUnidadesMensual[];
+  detalleUnidadesAcumulado: IDetalleUnidadesAcumulado[];
   detalleUnidadesTipo: ITipoUnidad[];
   detalleResultadosMensual: IDetalleResultadosMensual[];
   detalleResultadosCuentas: IDetalleResultadosCuentas[];
@@ -88,8 +90,9 @@ export class InternosComponent implements OnInit {
   anio: string;
   periodo: string;
   //Control de sp SP_ESTADO_DE_RESULTADOS_DETALLE
-  idDetalle: number;
+  idDetalleResultados: number; // 1 = mensual, 2 = acumulado. Muestra la tabla de acumulado o mensual
   idEstadoResultado: number;
+  idDetalleUnidades: number;
 
   detalleUnidadesConcepto: string;
   detalleUnidadesName: string;
@@ -281,7 +284,30 @@ export class InternosComponent implements OnInit {
       error => this.errorMessage = <any>error);
   }
 
-  getDetalleUnidadesTipo(carLine: string, tipoAuto: string = ''): void {
+  getDetalleUnidadesAcumulado(): void {
+    // Se usa como parametro de departamento el texto de Concepto del primer nivel,
+    // sin las letras N o S que se le agregan al inicio
+    let concepto = this.detalleUnidadesConcepto;
+    if (concepto.startsWith('N ')) concepto = concepto.substr(2);
+    else if (concepto.startsWith('S ')) concepto = concepto.substr(2);
+
+    //Limpiar tabla antes de consultar
+    this.detalleUnidadesAcumulado = [];
+
+    this._service.getDetalleUnidadesAcumulado({
+      idAgencia: this.selectedCompania,
+      mSucursal: this.selectedSucursal,
+      anio: this.anio,
+      mes: this.mes,
+      departamento: concepto
+    })
+      .subscribe(detalleUnidadesAcumulado => {
+        this.detalleUnidadesAcumulado = detalleUnidadesAcumulado;
+      },
+      error => this.errorMessage = <any>error);
+  }
+
+  getDetalleUnidadesTipo(carLine: string, tipoAuto: string = '', mes: string): void {
     // Se usa como parametro de departamento el texto de Concepto del primer nivel,
     // sin las letras N o S que se le agregan al inicio
     let concepto = this.detalleUnidadesConcepto;
@@ -292,7 +318,7 @@ export class InternosComponent implements OnInit {
       idAgencia: this.selectedCompania,
       mSucursal: this.selectedSucursal,
       anio: this.anio,
-      mes: this.mes,
+      mes:  mes === '' ? this.mes : mes, //Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
       departamento: concepto,
       carLine: carLine,
       tipoAuto: tipoAuto
@@ -314,7 +340,7 @@ export class InternosComponent implements OnInit {
       departamento: this.selectedDepartamento,
       concepto: concepto,
       idEstadoDeResultado: this.idEstadoResultado,
-      idDetalle: this.idDetalle,
+      idDetalle: this.idDetalleResultados,
       idEstadoResultado: this.idEstadoResultado
     })
       .subscribe(detalleResultadosMensual => {
@@ -324,12 +350,18 @@ export class InternosComponent implements OnInit {
         this.errorMessage = <any>error;
         this.detalleResultadosMensual = [];
       },
-      //Si la lista tiene más de 10 resultados se necesita ajustar el ancho de tabla para que quepa el scroll
-      () => {this.detalleResultadosMensualScroll = this.detalleResultadosMensual.length <= 10 ? true : false;}
+      //Si la lista tiene más de 10 resultados se necesita ajustar
+      //el ancho de tabla para que quepa el scroll
+      () => {
+        this.detalleResultadosMensualScroll = this.detalleResultadosMensual.length <= 10 ? true : false;
+      }
     );
   }
 
   getDetalleResultadosCuentas(numCta: string, mes: string = ''): void {
+    //Limpiar tabla antes de consultar
+    this.detalleResultadosCuentas = [];
+
     this._service.getDetalleResultadosCuentas({
       servidorAgencia: this.selectedIpSucursal,
       concentradora: this.selectedConcentradora,
@@ -424,7 +456,7 @@ export class InternosComponent implements OnInit {
     }
   }
 
-  onClickUnidades(i: number, value: number, name: string) {
+  onClickUnidades(i: number, value: number, name: string, idDetalleUnidades: number) {
     const concepto = this.resultadoUnidades[i].Concepto;
 
     if (concepto !== 'Total Unidades') {
@@ -432,28 +464,42 @@ export class InternosComponent implements OnInit {
       this.detalleUnidadesName = name;
       this.detalleUnidadesValue = value;
       this.detalleUnidadesConcepto = concepto;
-      this.getDetalleUnidadesMensual(concepto);
+      this.idDetalleUnidades = idDetalleUnidades;
+
+      if (idDetalleUnidades === 1) { // Mensual
+        this.getDetalleUnidadesMensual(concepto);
+      }
+      else if (idDetalleUnidades === 2) { // Acumulado
+        this.getDetalleUnidadesAcumulado();
+      }
     }
   }
 
-  onClickUnidadesSegundoNivel(i: number, value: string, name: string) {
+  onClickDetalleUnidadesMensual(i: number, value: string, name: string, mes: string = '') {
     if (value.trim() !== 'Total') {
       this.showUnidades = false;
       this.showDetalleUnidadesPrimerNivel = false;
       this.showDetalleUnidadesSegundoNivel = true;
       this.detalleUnidadesNameSegundoNivel = name;
       this.detalleUnidadesValueSegundoNivel = value;
-      this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesMensual[i].CarLine;
-      this.getDetalleUnidadesTipo(this.detalleUnidadesMensual[i].CarLine);
+
+      if (mes === '') { //mensual
+        this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesMensual[i].CarLine;
+        this.getDetalleUnidadesTipo(this.detalleUnidadesMensual[i].CarLine, '', mes);
+      }
+      else { //acumulado
+        this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesAcumulado[i].Carline + ' ' + name;
+        this.getDetalleUnidadesTipo(this.detalleUnidadesAcumulado[i].Carline, '', mes);
+      }
     }
   }
 
-  onClickResultado(i: number, value: number, name: string, idEstadoResultado: number, idDetalle: number) {
+  onClickResultado(i: number, value: number, name: string, idEstadoResultado: number, idDetalleResultados: number) {
     this.showDetallePrimerNivel = true;
     this.detalleName = name;
     this.detalleValue = value;
     this.detalleConcepto = this.estadoResultados[i].Concepto;
-    this.idDetalle = idDetalle;
+    this.idDetalleResultados = idDetalleResultados;
     this.idEstadoResultado = idEstadoResultado
     this.getDetalleResultadosMensual(this.detalleConcepto);
   }
@@ -461,10 +507,17 @@ export class InternosComponent implements OnInit {
   onClickDetalleSegundoNivel(i: number, value: number, name: string, mes: string = '') {
     //validar que solo entre cuando viene de real (excluir Ppto y Variacion)
     if (this.detalleName === 'Real' || this.detalleName === 'AcReal') {
+      //Etiqueta de mes usada en breadcrumb
+      if (mes !== '') {
+        this.detalleNameSegundoNivel = `(${name})`;
+      }
+      else {
+        this.detalleNameSegundoNivel = '';
+      }
+
       this.showResultados = false;
       this.showDetallePrimerNivel = false;
       this.showDetalleSegundoNivel = true;
-      this.detalleNameSegundoNivel = name;
       this.detalleValueSegundoNivel = value;
       this.detalleConceptoSegundoNivel = this.detalleResultadosMensual[i].Descr;
       this.getDetalleResultadosCuentas(this.detalleResultadosMensual[i].Numcta, mes);
