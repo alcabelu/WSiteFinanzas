@@ -168,28 +168,28 @@
                     <th class="bg-secondary text-white min-width-135">CarLine</th>
                     <th class="bg-secondary text-white">ENE</th>
                     <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">FEB</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">MAR</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">ABR</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">MAY</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">JUN</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">JUL</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">AGO</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">SEP</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">OCT</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">NOV</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
-                    <th class="bg-secondary text-white">DIC</th>
-                    <th class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "02"' class="bg-secondary text-white">FEB</th>
+                    <th *ngIf='mes >= "02"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "03"' class="bg-secondary text-white">MAR</th>
+                    <th *ngIf='mes >= "03"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "04"' class="bg-secondary text-white">ABR</th>
+                    <th *ngIf='mes >= "04"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "05"' class="bg-secondary text-white">MAY</th>
+                    <th *ngIf='mes >= "05"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "06"' class="bg-secondary text-white">JUN</th>
+                    <th *ngIf='mes >= "06"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "07"' class="bg-secondary text-white">JUL</th>
+                    <th *ngIf='mes >= "07"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "08"' class="bg-secondary text-white">AGO</th>
+                    <th *ngIf='mes >= "08"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "09"' class="bg-secondary text-white">SEP</th>
+                    <th *ngIf='mes >= "09"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "10"' class="bg-secondary text-white">OCT</th>
+                    <th *ngIf='mes >= "10"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "11"' class="bg-secondary text-white">NOV</th>
+                    <th *ngIf='mes >= "11"' class="bg-secondary text-white text-center"> % </th>
+                    <th *ngIf='mes >= "12"' class="bg-secondary text-white">DIC</th>
+                    <th *ngIf='mes >= "12"' class="bg-secondary text-white text-center"> % </th>
                     <th class="bg-secondary text-white">TOTAL</th>
                     <th class="bg-secondary text-white text-center"> % </th>
                     <!-- <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Real</th> -->
@@ -201,28 +201,28 @@
                     <td>{{ dra.Carline }}</td>
                     <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Enero", "01")'>{{ dra.Ene }}</td>
                     <td class="text-right">{{ dra.PtcEne | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Febrero", "02")'>{{ dra.Feb }}</td>
-                    <td class="text-right">{{ dra.PtcFeb | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Marzo", "03")'>{{ dra.Mar }}</td>
-                    <td class="text-right">{{ dra.PtcMar | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Abril", "04")'>{{ dra.Abr }}</td>
-                    <td class="text-right">{{ dra.PtcAbr | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Mayo", "05")'>{{ dra.May }}</td>
-                    <td class="text-right">{{ dra.PtcMay | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Junio", "06")'>{{ dra.Jun }}</td>
-                    <td class="text-right">{{ dra.PtcJun | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Julio", "07")'>{{ dra.Jul }}</td>
-                    <td class="text-right">{{ dra.PtcJul | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Agosto", "08")'>{{ dra.Ago }}</td>
-                    <td class="text-right">{{ dra.PtcAgo | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Septiembre", "09")'>{{ dra.Sep }}</td>
-                    <td class="text-right">{{ dra.PtcSep | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Octubre", "10")'>{{ dra.Oct }}</td>
-                    <td class="text-right">{{ dra.PtcOct | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Noviembre", "11")'>{{ dra.Nov }}</td>
-                    <td class="text-right">{{ dra.PtcNov | number:'1.2-2' }}</td>
-                    <td class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Diciembre", "12")'>{{ dra.Dic }}</td>
-                    <td class="text-right">{{ dra.PtcDic | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "02"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Febrero", "02")'>{{ dra.Feb }}</td>
+                    <td *ngIf='mes >= "02"' class="text-right">{{ dra.PtcFeb | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "03"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Marzo", "03")'>{{ dra.Mar }}</td>
+                    <td *ngIf='mes >= "03"' class="text-right">{{ dra.PtcMar | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "04"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Abril", "04")'>{{ dra.Abr }}</td>
+                    <td *ngIf='mes >= "04"' class="text-right">{{ dra.PtcAbr | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "05"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Mayo", "05")'>{{ dra.May }}</td>
+                    <td *ngIf='mes >= "05"' class="text-right">{{ dra.PtcMay | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "06"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Junio", "06")'>{{ dra.Jun }}</td>
+                    <td *ngIf='mes >= "06"' class="text-right">{{ dra.PtcJun | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "07"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Julio", "07")'>{{ dra.Jul }}</td>
+                    <td *ngIf='mes >= "07"' class="text-right">{{ dra.PtcJul | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "08"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Agosto", "08")'>{{ dra.Ago }}</td>
+                    <td *ngIf='mes >= "08"' class="text-right">{{ dra.PtcAgo | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "09"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Septiembre", "09")'>{{ dra.Sep }}</td>
+                    <td *ngIf='mes >= "09"' class="text-right">{{ dra.PtcSep | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "10"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Octubre", "10")'>{{ dra.Oct }}</td>
+                    <td *ngIf='mes >= "10"' class="text-right">{{ dra.PtcOct | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "11"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Noviembre", "11")'>{{ dra.Nov }}</td>
+                    <td *ngIf='mes >= "11"' class="text-right">{{ dra.PtcNov | number:'1.2-2' }}</td>
+                    <td *ngIf='mes >= "12"' class="text-center" (click)='onClickDetalleUnidadesMensual(i, dra.Carline, "Diciembre", "12")'>{{ dra.Dic }}</td>
+                    <td *ngIf='mes >= "12"' class="text-right">{{ dra.PtcDic | number:'1.2-2' }}</td>
                     <td class="text-center">{{ dra.TOTAL }}</td>
                     <td class="text-right">{{ dra.PctTotal | number:'1.2-2' }}</td>
                     <!-- <td *ngIf='idEstadoResultado === 3' class="text-right">{{ dra.Pct | number:'1.2-2' }}</td> -->
@@ -446,17 +446,17 @@
                 <th class="bg-secondary text-white min-width-135">No.Cuenta</th>
                 <th class="bg-secondary text-white min-width-220">Descripción</th>
                 <th class="bg-secondary text-white">ENE</th>
-                <th class="bg-secondary text-white">FEB</th>
-                <th class="bg-secondary text-white">MAR</th>
-                <th class="bg-secondary text-white">ABR</th>
-                <th class="bg-secondary text-white">MAY</th>
-                <th class="bg-secondary text-white">JUN</th>
-                <th class="bg-secondary text-white">JUL</th>
-                <th class="bg-secondary text-white">AGO</th>
-                <th class="bg-secondary text-white">SEP</th>
-                <th class="bg-secondary text-white">OCT</th>
-                <th class="bg-secondary text-white">NOV</th>
-                <th class="bg-secondary text-white">DIC</th>
+                <th *ngIf='mes >= "02"' class="bg-secondary text-white">FEB</th>
+                <th *ngIf='mes >= "03"' class="bg-secondary text-white">MAR</th>
+                <th *ngIf='mes >= "04"' class="bg-secondary text-white">ABR</th>
+                <th *ngIf='mes >= "05"' class="bg-secondary text-white">MAY</th>
+                <th *ngIf='mes >= "06"' class="bg-secondary text-white">JUN</th>
+                <th *ngIf='mes >= "07"' class="bg-secondary text-white">JUL</th>
+                <th *ngIf='mes >= "08"' class="bg-secondary text-white">AGO</th>
+                <th *ngIf='mes >= "09"' class="bg-secondary text-white">SEP</th>
+                <th *ngIf='mes >= "10"' class="bg-secondary text-white">OCT</th>
+                <th *ngIf='mes >= "11"' class="bg-secondary text-white">NOV</th>
+                <th *ngIf='mes >= "12"' class="bg-secondary text-white">DIC</th>
                 <th class="bg-secondary text-white">SUMA</th>
                 <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Real</th>
                 <th *ngIf='idEstadoResultado === 3' class="bg-secondary text-white">Presupuesto</th>
@@ -471,17 +471,17 @@
                 <td class="">{{ drm.Numcta }}</td>
                 <td class="">{{ drm.Descr }}</td>
                 <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Ene, 'Enero', '01')">{{ drm.Ene | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Feb, 'Febrero', '02')">{{ drm.Feb | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Mar, 'Marzo', '03')">{{ drm.Mar | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Abr, 'Abril', '04')">{{ drm.Abr | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.May, 'Mayo', '05')">{{ drm.May | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Jun, 'Junio', '06')">{{ drm.Jun | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Jul, 'Julio', '07')">{{ drm.Jul | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Ago, 'Agosto', '08')">{{ drm.Ago | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Sep, 'Septiembre', '09')">{{ drm.Sep | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Oct, 'Octubre', '10')">{{ drm.Oct | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Nov, 'Noviembre', '11')">{{ drm.Nov | number:'1.2-2' }}</td>
-                <td class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Dic, 'Diciembre', '12')">{{ drm.Dic | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "02"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Feb, 'Febrero', '02')">{{ drm.Feb | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "03"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Mar, 'Marzo', '03')">{{ drm.Mar | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "04"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Abr, 'Abril', '04')">{{ drm.Abr | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "05"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.May, 'Mayo', '05')">{{ drm.May | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "06"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Jun, 'Junio', '06')">{{ drm.Jun | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "07"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Jul, 'Julio', '07')">{{ drm.Jul | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "08"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Ago, 'Agosto', '08')">{{ drm.Ago | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "09"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Sep, 'Septiembre', '09')">{{ drm.Sep | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "10"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Oct, 'Octubre', '10')">{{ drm.Oct | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "11"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Nov, 'Noviembre', '11')">{{ drm.Nov | number:'1.2-2' }}</td>
+                <td *ngIf='mes >= "12"' class="text-right" (click)="onClickDetalleSegundoNivel(i, drm.Dic, 'Diciembre', '12')">{{ drm.Dic | number:'1.2-2' }}</td>
                 <td class="text-right">{{ drm.Suma | number:'1.2-2' }}</td>
                 <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Real | number:'1.2-2' }}</td>
                 <td *ngIf='idEstadoResultado === 3' class="text-right">{{ drm.Pspsto | number:'1.2-2' }}</td>
