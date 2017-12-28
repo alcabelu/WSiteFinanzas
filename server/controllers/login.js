@@ -1,45 +1,48 @@
 var LoginView = require('../views/reference'),
-    LoginModel = require('../models/dataAccess');
+  LoginModel = require('../models/dataAccess');
 
+var Login = function (conf) {
+  this.conf = conf || {};
+  this.view = new LoginView();
+  this.model = new LoginModel({
+    parameters: this.conf.parameters
+  });
 
-
-var Login = function(conf) {
-
-
-    this.conf = conf || {};
-    this.view = new LoginView();
-    this.model = new LoginModel({
-        parameters: this.conf.parameters
-    });
-
-
-
-
-    this.response = function() {
-        this[this.conf.funcionalidad](this.conf.req, this.conf.res, this.conf.next);
-    };
+  this.response = function () {
+    this[this.conf.funcionalidad](this.conf.req, this.conf.res, this.conf.next);
+  };
 };
 
+// /api/login/internos
+// Funcionalidad de login
+Login.prototype.get_auth = function (req, res, next) {
+  var self = this;
 
+  var usuario = req.query.usuario;
+  var password = req.query.password;
+  var mensajeUsuario = req.query.mensaje;
 
-Login.prototype.get_auth = function(req, res, next) {
+  var params = [
+    { name: 'Usuario', value: usuario, type: self.model.types.STRING },
+    { name: 'Password', value: password, type: self.model.types.STRING },
+    { name: 'MensajeUsuario', value: mensajeUsuario, type: self.model.types.STRING }
+  ];
 
-    var self = this;
+  this.model.query('SP_LogiWebSiteFinzas', params, function (error, result) {
+    //Cuando la contraseña es incorrecta, no existe el objeto result
+    if (typeof result === 'undefined') {
+      result = [{ 'MensajeUsuario': 'La contraseña es incorrecta' }];
+    }
 
-    var usuario = req.query.usuario;
-    var contrasena =  req.query.contrasena;
-    var params = [{ name: 'correo', value: usuario , type: self.model.types.STRING }
-    ,{ name: 'pass', value: contrasena, type: self.model.types.STRING }];
+    if (result.length > 0) {
+      console.log("result " + result[0]);
+    }
 
-    this.model.query('SEL_LOGIN_SP', params, function(error, result) {
-        if( result.length > 0  ){
-        	console.log("result " + result[0]);
-        }
-        self.view.expositor(res, {
-            error: error,
-            result: result,
-        });
+    self.view.expositor(res, {
+      error: error,
+      result: result,
     });
+  });
 };
 
 module.exports = Login;

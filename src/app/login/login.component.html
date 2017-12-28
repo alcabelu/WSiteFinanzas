@@ -1,22 +1,43 @@
 <div class="login-page" [@routerTransition]>
-    <div class="row justify-content-md-center">
-        <div class="col-md-4">
-            <img src="assets/images/logo.png" width="150px" class="user-avatar" />
-            <h1>Site Finanzas</h1>
-            <form role="form">
-                <div class="form-content">
-                    <div class="form-group">
-                        <input type="text" ng-model="name" class="form-control input-underline input-lg" id="" placeholder="Email">
-                    </div>
+  <div class="row justify-content-md-center">
+    <div class="col-md-4">
+      <img src="assets/images/logo.png" width="150px" class="user-avatar" />
+      <h1>Site Finanzas</h1>
+      <form role="form" novalidate [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="form-content">
+          <div class="form-group" [ngClass]="{
+                      'has-danger': usuario.invalid && usuario.dirty,
+                      'has-success': usuario.valid && usuario.dirty
+                    }">
+            <input type="text" class="form-control input-underline input-lg"
+                  formControlName="usuario"
+                  placeholder="Usuario">
 
-                    <div class="form-group">
-                        <input type="password" class="form-control input-underline input-lg" id="" placeholder="Password">
-                    </div>
-                </div>
-                <a class="btn rounded-btn" [routerLink]="['/internos']" (click)="onLoggedin()"> Log in </a>
-                &nbsp;
-                <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a>
-            </form>
+            <div *ngIf="usuario.errors && (usuario.dirty || usuario.touched)">
+              <p *ngIf="usuario.errors.required">Ingrese el Usuario</p>
+              <p *ngIf="usuario.errors.maxlength">Usuario con demasiados caracteres</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="password" class="form-control input-underline input-lg"
+                  formControlName="password"
+                  placeholder="Contraseña">
+
+            <div *ngIf="password.errors && (password.dirty || password.touched)">
+              <p *ngIf="password.errors.required">Ingrese la Contraseña</p>
+              <p *ngIf="password.errors.maxlength">Contraseña con demasiados caracteres</p>
+            </div>
+          </div>
+
+          <div *ngIf='signupForm.valid'>
+            <p>{{ mensajeUsuario }}</p>
+          </div>
         </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!signupForm.valid">Ingresar</button>
+        <!-- &nbsp;
+                <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a> -->
+      </form>
     </div>
+  </div>
 </div>
