@@ -320,8 +320,8 @@ export class InternosComponent implements OnInit {
       anio: this.anio,
       mes:  mes === '' ? this.mes : mes, //Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
       departamento: concepto,
-      carLine: carLine,
-      tipoAuto: tipoAuto
+      carLine: concepto === 'FLOTILLAS' ? tipoAuto : carLine, //Para el caso de flotillas el sp cambia carLine por tipoAuto
+      tipoAuto: concepto === 'FLOTILLAS' ? carLine : tipoAuto
     })
       .subscribe(detalleUnidadesTipo => {
         this.detalleUnidadesTipo = detalleUnidadesTipo;
@@ -351,9 +351,10 @@ export class InternosComponent implements OnInit {
         this.detalleResultadosMensual = [];
       },
       //Si la lista tiene más de 10 resultados se necesita ajustar
-      //el ancho de tabla para que quepa el scroll
+      //el ancho de tabla para que quepa el scroll (solo mensual)
       () => {
         this.detalleResultadosMensualScroll = this.detalleResultadosMensual.length <= 10 ? true : false;
+        this.fixedHeader();
       }
     );
   }
@@ -475,21 +476,21 @@ export class InternosComponent implements OnInit {
     }
   }
 
-  onClickDetalleUnidadesMensual(i: number, value: string, name: string, mes: string = '') {
+  onClickDetalleUnidadesMensual(i: number, value: string, strMes: string, mes: string = '', depto: string = '') {
     if (value.trim() !== 'Total') {
       this.showUnidades = false;
       this.showDetalleUnidadesPrimerNivel = false;
       this.showDetalleUnidadesSegundoNivel = true;
-      this.detalleUnidadesNameSegundoNivel = name;
+      this.detalleUnidadesNameSegundoNivel = strMes;
       this.detalleUnidadesValueSegundoNivel = value;
 
       if (mes === '') { //mensual
         this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesMensual[i].CarLine;
-        this.getDetalleUnidadesTipo(this.detalleUnidadesMensual[i].CarLine, '', mes);
+        this.getDetalleUnidadesTipo(this.detalleUnidadesMensual[i].CarLine, depto, mes);
       }
       else { //acumulado
-        this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesAcumulado[i].Carline + ' ' + name;
-        this.getDetalleUnidadesTipo(this.detalleUnidadesAcumulado[i].Carline, '', mes);
+        this.detalleUnidadesConceptoSegundoNivel = this.detalleUnidadesAcumulado[i].Carline + ' ' + strMes;
+        this.getDetalleUnidadesTipo(this.detalleUnidadesAcumulado[i].Carline, depto, mes);
       }
     }
   }
@@ -502,6 +503,17 @@ export class InternosComponent implements OnInit {
     this.idDetalleResultados = idDetalleResultados;
     this.idEstadoResultado = idEstadoResultado
     this.getDetalleResultadosMensual(this.detalleConcepto);
+  }
+
+  //Usa CSS transforms para dejar los titulos fijos en la tabla
+  fixedHeader(): void {
+    //Esperar a que se construya la tabla, delay de 1.5 segundos
+    setTimeout(function () {
+      document.getElementById("detalleResultadosAcumulado").addEventListener("scroll", function(){
+        var translate = "translate(0,"+this.scrollTop+"px)";
+        this.querySelector("thead").style.transform = translate;
+    })
+   }, 1000);
   }
 
   onClickDetalleSegundoNivel(i: number, value: number, name: string, mes: string = '') {
@@ -555,5 +567,6 @@ export class InternosComponent implements OnInit {
     this.showResultados = false;
     this.showDetalleSegundoNivel = false;
     this.showDetallePrimerNivel = true;
+    this.fixedHeader();
   }
 }

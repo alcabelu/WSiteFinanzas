@@ -114,5 +114,17 @@
 //Tabla con doble scroll (x,y)
 .table-double-scroll {
   height: 300px;
-  overflow-y: auto;
+  border-spacing: 0px;
+  border-collapse: separate;
+  overflow: auto;
+
+  th, td {
+    border-bottom: 1px solid #e9ecef;
+    border-right: 1px solid #e9ecef;
+  }
+
+  td {
+    background-color: #fff;
+  }
 }
+
