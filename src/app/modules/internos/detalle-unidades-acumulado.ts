@@ -24,6 +24,7 @@ export interface IDetalleUnidadesAcumulado {
   Nov: number,
   PtcNov: number,
   Dic: number,
+  PtcDic: number,
   TOTAL: number,
   PctTotal: number
 }

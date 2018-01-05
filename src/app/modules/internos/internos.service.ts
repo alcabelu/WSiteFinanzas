@@ -14,6 +14,7 @@ import { IDetalleResultadosMensual } from './detalle-resultados-mensual';
 import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
 import { ITipoUnidad } from './tipo-unidad';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
+import { ISeries } from './series';
 
 @Injectable()
 export class InternosService {
@@ -27,6 +28,8 @@ export class InternosService {
   private _urlEfectivoSituacion = 'api/internos/efectivoysituacion';
   private _urlDetalleUnidadesMensual = 'api/internos/detalleunidadesmensual';
   private _urlDetalleUnidadesTipo = 'api/internos/detalleunidadestipo';
+  private _urlDetalleUnidadesTipoAcumulado = 'api/internos/detalleunidadestipoacumulado';
+  private _urlDetalleUnidadesSeries = 'api/internos/detalleunidadesseries';
   private _urlDetalleUnidadesAcumulado = 'api/internos/detalleunidadesacumulado';
   private _urlDetalleResultadosMensual = 'api/internos/detalleresultadosmensual';
   private _urlDetalleResultadosCuentas = 'api/internos/detalleresultadoscuentas';
@@ -151,6 +154,41 @@ export class InternosService {
     Params = Params.append('tipoauto', parameters.tipoAuto);
 
     return this._http.get<ITipoUnidad[]>(this._urlDetalleUnidadesTipo, { params: Params })
+      .catch(this.handleError);
+  }
+
+  getDetalleUnidadesTipoAcumulado(parameters): Observable<ITipoUnidad[]> {
+    // Initialize Params Object
+    let Params = new HttpParams();
+
+    // Begin assigning parameters
+    Params = Params.append('idcia', parameters.idAgencia);
+    Params = Params.append('anio', parameters.anio);
+    Params = Params.append('mes', parameters.mes);
+    Params = Params.append('departamento', parameters.departamento);
+    Params = Params.append('carline', parameters.carLine);
+    Params = Params.append('tipoauto', parameters.tipoAuto);
+
+    return this._http.get<ITipoUnidad[]>(this._urlDetalleUnidadesTipoAcumulado, { params: Params })
+      .catch(this.handleError);
+  }
+
+  getDetalleUnidadesSeries(parameters): Observable<ISeries[]> {
+    // Initialize Params Object
+    let Params = new HttpParams();
+
+    // Begin assigning parameters
+    Params = Params.append('idcia', parameters.idAgencia);
+    Params = Params.append('msuc', parameters.mSucursal);
+    Params = Params.append('anio', parameters.anio);
+    Params = Params.append('mes', parameters.mes);
+    Params = Params.append('departamento', parameters.departamento);
+    Params = Params.append('idestadoresultado', parameters.idEstadoDeResultado);
+    Params = Params.append('idreporte', parameters.idReporte);
+    Params = Params.append('carline', parameters.carLine);
+    Params = Params.append('tipoauto', parameters.tipoAuto);
+
+    return this._http.get<ISeries[]>(this._urlDetalleUnidadesSeries, { params: Params })
       .catch(this.handleError);
   }
 

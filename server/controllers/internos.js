@@ -231,6 +231,70 @@ internos.prototype.get_detalleunidadestipo = function (req, res, next) {
   });
 };
 
+// /api/internos/detalleunidadestipoacumulado
+// Funcionalidad para tipo de Unidades acumulado(tercer nivel de unidades)
+internos.prototype.get_detalleunidadestipoacumulado = function (req, res, next) {
+  var self = this;
+  var idAgencia = req.query.idcia;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var departamento = req.query.departamento;
+  var xCarLine = req.query.carline;
+  var xTipoAuto = req.query.tipoauto;
+
+  var params = [
+    { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'Departamento', value: departamento, type: self.model.types.STRING },
+    { name: 'xCarLine', value: xCarLine, type: self.model.types.STRING },
+    { name: 'xTipoAuto', value: xTipoAuto, type: self.model.types.STRING }
+  ];
+
+  this.model.query('SP_TIPO_DE_UNIDADES_ACUMULADO', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
+
+// /api/internos/detalleunidadesseries
+// Funcionalidad para series de Unidades (cuarto nivel de unidades)
+internos.prototype.get_detalleunidadesseries = function (req, res, next) {
+  var self = this;
+  var idAgencia = req.query.idcia;
+  var mSuc = req.query.msuc;
+  var anio = req.query.anio;
+  var mes = req.query.mes;
+  var idEstadoDeResultado = req.query.idestadoresultado;
+  var idReporte = req.query.idreporte;
+  var departamento = req.query.departamento;
+  var xCarLine = req.query.carline;
+  var xTipoAuto = req.query.tipoauto;
+
+  var params = [
+    { name: 'IdAgencia', value: idAgencia, type: self.model.types.STRING },
+    { name: 'MSucursal', value: mSuc, type: self.model.types.STRING },
+    { name: 'Anio', value: anio, type: self.model.types.STRING },
+    { name: 'Mes', value: mes, type: self.model.types.STRING },
+    { name: 'Departamento', value: departamento, type: self.model.types.STRING },
+    { name: 'IdEstadoDeResultado', value: idEstadoDeResultado, type: self.model.types.INT },
+    { name: 'IdReporte', value: idReporte, type: self.model.types.STRING },
+    { name: 'xCarLine', value: xCarLine, type: self.model.types.STRING },
+    { name: 'xTipoAuto', value: xTipoAuto, type: self.model.types.STRING }
+  ];
+
+  this.model.query('SP_SERIES', params, function (error, result) {
+    console.log(params);
+    self.view.expositor(res, {
+      error: error,
+      result: result,
+    });
+  });
+};
+
 // /api/internos/detalleunidadesacumulado
 // Funcionalidad para detalle de Unidades Acumulado(segundo nivel de unidades)
 internos.prototype.get_detalleunidadesacumulado = function (req, res, next) {
