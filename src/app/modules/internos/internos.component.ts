@@ -18,6 +18,8 @@ import { IDetalleResultadosCuentas } from './detalle-resultados-cuentas';
 import { ITipoUnidad } from './tipo-unidad';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
 import { ISeries } from './series';
+import { ColumnSortedEvent } from '../../shared/services/sort.service';
+
 
 @Component({
   selector: 'app-internos',
@@ -61,11 +63,13 @@ export class InternosComponent implements OnInit {
   showDetalleUnidadesTercerNivel = false;
   showDetallePrimerNivel = false;
   showDetalleSegundoNivel = false;
+  showSumaDepartamentos = false;
 
   isCollapsed = true;
 
   resultadoUnidadesService: IResultadoInternos[] = [];
   estadoResultados: IResultadoInternos[] = [];
+  resultadoSumaDepartamentos: IResultadoInternos[] = [];
   unidadesDepartamento: IResultadoInternos[] = [];
   efectivoSituacion: IEfectivoSituacion[];
   companias: ICompania[];
@@ -88,6 +92,8 @@ export class InternosComponent implements OnInit {
   selectedIpSucursal = '';
   selectedConcentradora = '';
   selectedDepartamento = 'Todos';
+  selectedDepartamentos: string[];
+  selectedDepartamentosStr: string; // Se formatean los departamentos como los necesita el sp
   deptoFlotillas: string; //Se guarda el departamento que aparece solo para flotillas segundo nivel
   detalleResultadosMensualScroll = false;
   detalleResultadosCuentasScroll = false;
@@ -163,16 +169,38 @@ export class InternosComponent implements OnInit {
       this.getEfectivoSituacion();
     }
     else if (sCompania !== '0') {
-      this.hideDetalles();
-      this.showEfectivoSituacion = false;
-      this.getResultadoUnidades();
-      this.getEstadoResultados();
-      this.getUnidadesDepartamento();
+      this.showUnidadesInit();
 
       //Actualizar info de breadcrumb
       const a = this.companias.find(x => x.ID == this.selectedCompania);
       this.selectedNombreCompania = a.NOMBRE;
     }
+  }
+
+  private showUnidadesInit(): void {
+    this.hideDetalles();
+    this.showReporteUnidades = true;
+    this.showEfectivoSituacion = false;
+    this.showSumaDepartamentos = false;
+    this.getResultadoUnidades();
+    this.getEstadoResultados();
+    this.getUnidadesDepartamento();
+  }
+
+  sumaDepartamentos(): void {
+    if (this.selectedDepartamentosStr && this.selectedDepartamentosStr !== "'") {
+      this.getSumaDepartamentos();
+    }
+  }
+
+  showSuma(): void {
+    this.showReporteUnidades = false;
+    this.showSumaDepartamentos = true;
+  }
+
+  hideSumaDepartamentos(): void {
+    this.showUnidadesInit();
+    //TODO: reiniciar objeto de suma
   }
 
   getResultadoUnidades(): void {
@@ -198,6 +226,20 @@ export class InternosComponent implements OnInit {
     })
       .subscribe(estadoResultados => {
         this.estadoResultados = estadoResultados;
+      },
+      error => this.errorMessage = <any>error);
+  }
+
+  getSumaDepartamentos(): void {
+    this._service.getSumaDepartamentos({
+      idCia: this.selectedCompania,
+      idSucursal: this.selectedSucursal,
+      departamento: this.selectedDepartamentosStr,
+      mes: this.mes,
+      anio: this.anio
+    })
+      .subscribe(sumaDepartamentos => {
+        this.resultadoSumaDepartamentos = sumaDepartamentos;
       },
       error => this.errorMessage = <any>error);
   }
@@ -502,20 +544,34 @@ export class InternosComponent implements OnInit {
     this.selectedDepartamento = newValue;
   }
 
+  onChangeSumaDepartamentos(): void {
+    this.selectedDepartamentosStr = "'";
+    this.selectedDepartamentos.forEach(d => {
+      this.selectedDepartamentosStr += `''${d}'',`;
+    });
+    this.selectedDepartamentosStr = this.selectedDepartamentosStr.substring(0, this.selectedDepartamentosStr.length - 1);
+    this.selectedDepartamentosStr += "'";
+  }
+
   onChangeTipoReporte(newValue: number): void {
     this.selectedTipoReporte = newValue;
     const nv = newValue.toString();
 
     if (nv === '4' || nv === '5') {
-      this.showReporteUnidades = false;
-      this.sucursales = [];
-      this.departamentos = [];
+      this.hideReporteUnidades();
     }
     else {
       this.showReporteUnidades = true;
       this.setDefaultDate();
       this.getSucursales();
     }
+  }
+
+  private hideReporteUnidades() {
+    this.showReporteUnidades = false;
+    this.showSumaDepartamentos = false;
+    this.sucursales = [];
+    this.departamentos = [];
   }
 
   onClickUnidades(i: number, value: number, name: string, idDetalleUnidades: number) {
@@ -614,6 +670,28 @@ export class InternosComponent implements OnInit {
     else return "";
   }
 
+  //Calcula el valor del tooltip para estado de resultados
+  calculaTooltip(value: number, col: number): number {
+    let v = 0;
+    if (this.unidadesDepartamento[0]) {
+      const ud = this.unidadesDepartamento[0];
+      switch (col) {
+        case 1: v = ud.Real;
+          break;
+        case 3: v = ud.PPto;
+          break;
+        case 7: v = ud.AcReal;
+          break;
+        case 9: v = ud.AcPPto;
+          break;
+      }
+      return value / v;
+    }
+    else {
+      return 0;
+    }
+  }
+
   onClickDetalleSegundoNivel(i: number, value: number, name: string, mes: string = '') {
     //validar que solo entre cuando viene de real (excluir Ppto y Variacion)
     if (this.detalleName === 'Real' || this.detalleName === 'AcReal') {
@@ -677,5 +755,18 @@ export class InternosComponent implements OnInit {
     this.showDetalleSegundoNivel = false;
     this.showDetallePrimerNivel = true;
     this.fixedHeader("detalleResultadosAcumulado");
+  }
+
+  //Ordenamiento de tabla
+  onSorted(event: ColumnSortedEvent, obj: Object[]) {
+    //Se pasa como referencia el objeto que se quiere ordenar
+    obj.sort(function (a, b) {
+      if (event.sortDirection === 'asc') {
+        return a[event.sortColumn] - b[event.sortColumn];
+      }
+      else {
+        return b[event.sortColumn] - a[event.sortColumn];
+      }
+    });
   }
 }
