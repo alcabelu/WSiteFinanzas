@@ -57,7 +57,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let dra of detalleUnidadesAcumulado | async; let i = index;'>
+    <tr *ngFor='let dra of detalleUnidadesAcumulado; let i = index;'>
       <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ dra.Depto }}</td>
       <td>{{ dra.Carline }}</td>
       <td class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "Enero", "01", dra.Depto)'>{{ dra.Ene }}</td>
