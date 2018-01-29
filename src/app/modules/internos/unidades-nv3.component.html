@@ -9,10 +9,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor='let d of detalleUnidadesTipo | async; let i = index;' (dblclick)='onClickDetalleUnidadesTipo(i, d.TipoUnidad)'>
+        <tr *ngFor='let d of detalleUnidadesTipo; let i = index;' (dblclick)='onClickDetalleUnidadesTipo(i, d.TipoUnidad)'>
           <td>{{ d.TipoUnidad }}</td>
-          <td class="text-center">{{ d.Cantidad }}</td>
-          <td class="text-right">{{ d.Perc | number: '1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='d.Cantidad'>{{ d.Cantidad }}</td>
+          <td class="text-right" [suma-columnas]='d.Perc'>{{ d.Perc | number: '1.2-2' }}</td>
         </tr>
       </tbody>
     </table>
@@ -54,33 +54,33 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let dut of detalleUnidadesTipo | async; let i = index;'>
+    <tr *ngFor='let dut of detalleUnidadesTipo; let i = index;'>
       <td>{{ dut.TipoUnidad }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Enero", "01")'>{{ dut.Ene }}</td>
+      <td class="text-center" [suma-columnas]='dut.Ene' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Enero", "01")'>{{ dut.Ene }}</td>
       <td class="text-right">{{ dut.PercEne | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Febrero", "02")'>{{ dut.Feb }}</td>
+      <td class="text-center" [suma-columnas]='dut.Feb' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Febrero", "02")'>{{ dut.Feb }}</td>
       <td class="text-right">{{ dut.PercFeb | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Marzo", "03")'>{{ dut.Mar }}</td>
+      <td class="text-center" [suma-columnas]='dut.Mar' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Marzo", "03")'>{{ dut.Mar }}</td>
       <td class="text-right">{{ dut.PercMar | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Abril", "04")'>{{ dut.Abr }}</td>
+      <td class="text-center" [suma-columnas]='dut.Abr' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Abril", "04")'>{{ dut.Abr }}</td>
       <td class="text-right">{{ dut.PercAbr | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Mayo", "05")'>{{ dut.May }}</td>
+      <td class="text-center" [suma-columnas]='dut.May' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Mayo", "05")'>{{ dut.May }}</td>
       <td class="text-right">{{ dut.PercMay | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Junio", "06")'>{{ dut.Jun }}</td>
+      <td class="text-center" [suma-columnas]='dut.Jun' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Junio", "06")'>{{ dut.Jun }}</td>
       <td class="text-right">{{ dut.PercJun | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Julio", "07")'>{{ dut.Jul }}</td>
+      <td class="text-center" [suma-columnas]='dut.Jul' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Julio", "07")'>{{ dut.Jul }}</td>
       <td class="text-right">{{ dut.PercJul | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Agosto", "08")'>{{ dut.Ago }}</td>
+      <td class="text-center" [suma-columnas]='dut.Ago' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Agosto", "08")'>{{ dut.Ago }}</td>
       <td class="text-right">{{ dut.PercAgo | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Septiembre", "09")'>{{ dut.Sep }}</td>
+      <td class="text-center" [suma-columnas]='dut.Sep' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Septiembre", "09")'>{{ dut.Sep }}</td>
       <td class="text-right">{{ dut.PercSep | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Octubre", "10")'>{{ dut.Oct }}</td>
+      <td class="text-center" [suma-columnas]='dut.Oct' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Octubre", "10")'>{{ dut.Oct }}</td>
       <td class="text-right">{{ dut.PercOct | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Noviembre", "11")'>{{ dut.Nov }}</td>
+      <td class="text-center" [suma-columnas]='dut.Nov' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Noviembre", "11")'>{{ dut.Nov }}</td>
       <td class="text-right">{{ dut.PercNov | number:'1.2-2' }}</td>
-      <td class="text-center" (click)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Diciembre", "12")'>{{ dut.Dic }}</td>
+      <td class="text-center" [suma-columnas]='dut.Dic' (dblclick)='onClickDetalleUnidadesTipo(i, dut.TipoUnidad, "Diciembre", "12")'>{{ dut.Dic }}</td>
       <td class="text-right">{{ dut.PercDic | number:'1.2-2' }}</td>
-      <td class="text-center">{{ dut.TOTAL }}</td>
+      <td class="text-center" [suma-columnas]=''>{{ dut.TOTAL }}</td>
       <td class="text-right">{{ dut.PercTotal | number:'1.2-2' }}</td>
     </tr>
   </tbody>

@@ -1,7 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, OnDestroy, EventEmitter } from '@angular/core';
 import { InternosService } from './internos.service';
 import { ITipoUnidad } from './tipo-unidad';
 import { Observable } from 'rxjs/Observable';
+import { ColumnSortedEvent } from '../../shared/index';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -9,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: './unidades-nv3.component.html',
   styleUrls: ['./internos.component.scss']
 })
-export class UnidadesNv3Component implements OnInit {
+export class UnidadesNv3Component implements OnInit, OnDestroy {
 
   @Input() idDetalleUnidades: number;
   @Input() detalleUnidadesConcepto: string;
@@ -34,46 +36,53 @@ export class UnidadesNv3Component implements OnInit {
   @Output() idReporte = new EventEmitter<string>();
   @Output() fixedHeaderId = new EventEmitter<string>();
 
-  detalleUnidadesTipo: Observable<ITipoUnidad[]>;
+  private unidadesTipoSubscription: Subscription;
+  detalleUnidadesTipo: ITipoUnidad[];
 
   constructor(private _service: InternosService) { }
 
   ngOnInit() {
     this.fixedHeaderId.emit('idDetalleUnidadesTipo');
     if (this.mesAcumulado === '') { // mensual
-      this.detalleUnidadesTipo = this.getDetalleUnidadesTipo(this.carLine, this.departamentoAcumulado, this.mes);
+      this.getDetalleUnidadesTipo(this.carLine, this.departamentoAcumulado, this.mes);
     } else { // acumulado
-      this.detalleUnidadesTipo =
         // HARD CODE. en la version prod, siempre muestra los 12 meses (wtf)
         this.getDetalleUnidadesTipoAcumulado(this.carLine, this.departamentoAcumulado, '12');
     }
   }
 
-  getDetalleUnidadesTipo(carLine: string, tipoAuto: string = '', mes: string): Observable<ITipoUnidad[]> {
-    // Se usa como parametro de departamento el texto de Concepto del primer nivel,
-    // sin las letras N o S que se le agregan al inicio
-    let concepto = this.detalleUnidadesConcepto;
-    if (concepto.startsWith('N ')) {
-      concepto = concepto.substr(2);
-    } else if (concepto.startsWith('S ')) {
-      concepto = concepto.substr(2);
-    }
-
-    this.deptoFlotillas.emit(tipoAuto); // Se usa el departamento que aparece solo para flotillas en el segundo nivel
-
-    return this._service.getDetalleUnidadesTipo({
-      idAgencia: this.selectedCompania,
-      mSucursal: this.selectedSucursal,
-      anio: this.anio,
-      mes: mes === '' ? this.mes : mes, // Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
-      departamento: concepto,
-      // Para el caso de flotillas el sp cambia carLine por tipoAuto (columna depto aparece solo para flotillas)
-      carLine: concepto === 'FLOTILLAS' ? tipoAuto : carLine,
-      tipoAuto: concepto === 'FLOTILLAS' ? carLine : tipoAuto
-    });
+  ngOnDestroy() {
+    this.unidadesTipoSubscription.unsubscribe();
   }
 
-  getDetalleUnidadesTipoAcumulado(carLine: string, tipoAuto: string = '', mes: string): Observable<ITipoUnidad[]> {
+  getDetalleUnidadesTipo(carLine: string, tipoAuto: string = '', mes: string): void {
+    // Se usa como parametro de departamento el texto de Concepto del primer nivel,
+    // sin las letras N o S que se le agregan al inicio
+    let concepto = this.detalleUnidadesConcepto;
+    if (concepto.startsWith('N ')) {
+      concepto = concepto.substr(2);
+    } else if (concepto.startsWith('S ')) {
+      concepto = concepto.substr(2);
+    }
+
+    this.deptoFlotillas.emit(tipoAuto); // Se usa el departamento que aparece solo para flotillas en el segundo nivel
+
+    this.unidadesTipoSubscription = this._service.getDetalleUnidadesTipo({
+      idAgencia: this.selectedCompania,
+      mSucursal: this.selectedSucursal,
+      anio: this.anio,
+      mes: mes === '' ? this.mes : mes, // Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
+      departamento: concepto,
+      // Para el caso de flotillas el sp cambia carLine por tipoAuto (columna depto aparece solo para flotillas)
+      carLine: concepto === 'FLOTILLAS' ? tipoAuto : carLine,
+      tipoAuto: concepto === 'FLOTILLAS' ? carLine : tipoAuto
+    }).subscribe(
+      unidadesTipo => { this.detalleUnidadesTipo = unidadesTipo; },
+      error => { console.log(error); }
+    );
+  }
+
+  getDetalleUnidadesTipoAcumulado(carLine: string, tipoAuto: string = '', mes: string): void {
     // Se usa como parametro de departamento el texto de Concepto del primer nivel,
     // sin las letras N o S que se le agregan al inicio
     let concepto = this.detalleUnidadesConcepto;
@@ -86,7 +95,7 @@ export class UnidadesNv3Component implements OnInit {
 
     this.deptoFlotillas.emit(tipoAuto); // Se usa el departamento que aparece solo para flotillas en el segundo nivel
 
-    return this._service.getDetalleUnidadesTipoAcumulado({
+    this.unidadesTipoSubscription = this._service.getDetalleUnidadesTipoAcumulado({
       idAgencia: this.selectedCompania,
       mSucursal: this.selectedSucursal,
       anio: this.anio,
@@ -95,7 +104,10 @@ export class UnidadesNv3Component implements OnInit {
       // Para el caso de flotillas el sp cambia carLine por tipoAuto (columna depto aparece solo para flotillas)
       carLine: concepto === 'FLOTILLAS' ? tipoAuto : carLine,
       tipoAuto: concepto === 'FLOTILLAS' ? carLine : tipoAuto
-    });
+    }).subscribe(
+      unidadesTipoAcumulado => { this.detalleUnidadesTipo = unidadesTipoAcumulado; },
+      error => { console.log(error); }
+    );
   }
 
   onClickDetalleUnidadesTipo(i: number, tipoUnidad: string, strMes: string = '', mes: string = '') {
@@ -113,5 +125,17 @@ export class UnidadesNv3Component implements OnInit {
       this.mesAcumuladoNv3.emit(mes);
       // this.fixedHeader('detalleUnidadesSeries');
     }
+  }
+
+  // Ordenamiento de tabla
+  onSorted(event: ColumnSortedEvent, obj: Object[]) {
+    // Se pasa como referencia el objeto que se quiere ordenar
+    obj.sort(function (a, b) {
+      if (event.sortDirection === 'asc') {
+        return a[event.sortColumn] - b[event.sortColumn];
+      } else {
+        return b[event.sortColumn] - a[event.sortColumn];
+      }
+    });
   }
 }

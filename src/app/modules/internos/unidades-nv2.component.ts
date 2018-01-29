@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, OnDestroy, EventEmitter } from '@angular/core';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
 import { ColumnSortedEvent } from '../../shared/index';
 import { ITipoUnidad } from './tipo-unidad';
 import { InternosService } from './internos.service';
 import { Observable } from 'rxjs/Observable';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({

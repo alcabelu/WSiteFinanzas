@@ -1,12 +1,17 @@
-import { Directive, HostListener, Input, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, HostListener, Input, EventEmitter, ElementRef, Renderer2, OnDestroy } from '@angular/core';
 import { SumaColumnasService } from './suma-columnas.service';
 
 @Directive({
   selector: '[suma-columnas]'
 })
-export class SumaColumnasDirective {
+export class SumaColumnasDirective implements OnDestroy {
 
-  constructor(private el: ElementRef, private renderer :Renderer2, private sumaColumnasService: SumaColumnasService) { }
+  ngOnDestroy(): void {
+    // Cuando se destruye la directiva (se destruye la tabla que la contiene) mandar un -1 para indicarlo
+    this.sumaColumnasService.add(-1);
+  }
+
+  constructor(private el: ElementRef, private renderer: Renderer2, private sumaColumnasService: SumaColumnasService) { }
 
   @Input('suma-columnas') valueSelected;
 
