@@ -1,0 +1,110 @@
+<div class="card-body">
+    <nav role="navigation">
+        <ol class="breadcrumb">
+            <li *ngFor='let bc of breadcrumbs' class="breadcrumb-item" [ngClass]='{"active": bc.active}'>
+                <a *ngIf='!bc.active; else breadcrumbActive' href="javascript:void(0)" (click)='breadcrumbsRouting(bc)'>{{ bc.text }}</a>
+
+                <ng-template #breadcrumbActive>
+                    {{ bc.text }}
+                </ng-template>
+            </li>
+
+          <!-- <li class="breadcrumb-item">
+            <a href="javascript:void(0)" (click)='hideDetalleUnidadesPrimerNivel()'>{{ selectedNombreCompania }}</a>
+          </li>
+          <li class="breadcrumb-item active">{{ detalleUnidadesConcepto }}</li> -->
+        </ol>
+      </nav>
+  <div *ngIf='idAcumulado === 1' class="row justify-content-center">
+    <div class="col-md-6">
+      <table class="table table-sm table-bordered table-hover-td" sortable-table (sorted)="onSorted($event, detalleUnidadesMensual)">
+        <thead>
+          <tr>
+            <!-- Flotillas tiene una columna extra (Depto) -->
+            <th *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"' class="bg-secondary text-white">Depto</th>
+            <th class="bg-secondary text-white">CarLine</th>
+            <th class="bg-secondary text-white text-center" sortable-column='Cantidad'>Cantidad</th>
+            <th class="bg-secondary text-white text-center" sortable-column='Perc'>%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor='let d of detalleUnidadesMensual; let i = index;' (dblclick)='onClickDetalleUnidadesMensual(d.CarLine, "TipoUnidades", "", d.Depto)'>
+            <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ d.Depto }}</td>
+            <td>{{ d.CarLine }}</td>
+            <td class="text-center" [suma-columnas]='d.Cantidad'>{{ d.Cantidad === null ? 0 : d.Cantidad }}</td>
+            <td class="text-right" [suma-columnas]='d.Perc'>{{ d.Perc | number: '1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <table *ngIf='idAcumulado === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll"
+    sortable-table (sorted)="onSorted($event, detalleUnidadesAcumulado)">
+    <thead>
+      <tr>
+        <th *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"' class="bg-secondary text-white min-width-220">Depto</th>
+        <th class="bg-secondary text-white min-width-135">CarLine</th>
+        <th class="bg-secondary text-white" sortable-column='Ene'>ENE</th>
+        <th class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "02"' class="bg-secondary text-white" sortable-column='Feb'>FEB</th>
+        <th *ngIf='mes >= "02"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "03"' class="bg-secondary text-white" sortable-column='Mar'>MAR</th>
+        <th *ngIf='mes >= "03"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "04"' class="bg-secondary text-white" sortable-column='Abr'>ABR</th>
+        <th *ngIf='mes >= "04"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "05"' class="bg-secondary text-white" sortable-column='May'>MAY</th>
+        <th *ngIf='mes >= "05"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "06"' class="bg-secondary text-white" sortable-column='Jun'>JUN</th>
+        <th *ngIf='mes >= "06"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "07"' class="bg-secondary text-white" sortable-column='Jul'>JUL</th>
+        <th *ngIf='mes >= "07"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "08"' class="bg-secondary text-white" sortable-column='Ago'>AGO</th>
+        <th *ngIf='mes >= "08"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "09"' class="bg-secondary text-white" sortable-column='Sep'>SEP</th>
+        <th *ngIf='mes >= "09"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "10"' class="bg-secondary text-white" sortable-column='Oct'>OCT</th>
+        <th *ngIf='mes >= "10"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "11"' class="bg-secondary text-white" sortable-column='Nov'>NOV</th>
+        <th *ngIf='mes >= "11"' class="bg-secondary text-white text-center"> % </th>
+        <th *ngIf='mes >= "12"' class="bg-secondary text-white" sortable-column='Dic'>DIC</th>
+        <th *ngIf='mes >= "12"' class="bg-secondary text-white text-center"> % </th>
+        <th class="bg-secondary text-white" sortable-column='TOTAL'>TOTAL</th>
+        <th class="bg-secondary text-white text-center"> % </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor='let dra of detalleUnidadesAcumulado; let i = index;'>
+        <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ dra.Depto }}</td>
+        <td>{{ dra.Carline }}</td>
+        <td class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "01", dra.Depto)'>{{ dra.Ene }}</td>
+        <td class="text-right">{{ dra.PtcEne | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "02"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "02", dra.Depto)'>{{ dra.Feb }}</td>
+        <td *ngIf='mes >= "02"' class="text-right">{{ dra.PtcFeb | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "03"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "03", dra.Depto)'>{{ dra.Mar }}</td>
+        <td *ngIf='mes >= "03"' class="text-right">{{ dra.PtcMar | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "04"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "04", dra.Depto)'>{{ dra.Abr }}</td>
+        <td *ngIf='mes >= "04"' class="text-right">{{ dra.PtcAbr | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "05"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "05", dra.Depto)'>{{ dra.May }}</td>
+        <td *ngIf='mes >= "05"' class="text-right">{{ dra.PtcMay | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "06"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "06", dra.Depto)'>{{ dra.Jun }}</td>
+        <td *ngIf='mes >= "06"' class="text-right">{{ dra.PtcJun | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "07"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "07", dra.Depto)'>{{ dra.Jul }}</td>
+        <td *ngIf='mes >= "07"' class="text-right">{{ dra.PtcJul | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "08"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "08", dra.Depto)'>{{ dra.Ago }}</td>
+        <td *ngIf='mes >= "08"' class="text-right">{{ dra.PtcAgo | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "09"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "09", dra.Depto)'>{{ dra.Sep }}</td>
+        <td *ngIf='mes >= "09"' class="text-right">{{ dra.PtcSep | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "10"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "10", dra.Depto)'>{{ dra.Oct }}</td>
+        <td *ngIf='mes >= "10"' class="text-right">{{ dra.PtcOct | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "11"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "11", dra.Depto)'>{{ dra.Nov }}</td>
+        <td *ngIf='mes >= "11"' class="text-right">{{ dra.PtcNov | number:'1.2-2' }}</td>
+        <td *ngIf='mes >= "12"' class="text-center" (click)='onClickDetalleUnidadesMensual(dra.Carline, "12", dra.Depto)'>{{ dra.Dic }}</td>
+        <td *ngIf='mes >= "12"' class="text-right">{{ dra.PtcDic | number:'1.2-2' }}</td>
+        <td class="text-center">{{ dra.TOTAL }}</td>
+        <td class="text-right">{{ dra.PctTotal | number:'1.2-2' }}</td>
+        <!-- <td *ngIf='idEstadoResultado === 3' class="text-right">{{ dra.Pct | number:'1.2-2' }}</td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>

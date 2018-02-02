@@ -1,0 +1,9 @@
+<div class="card-body">
+  <nav role="navigation">
+    <ol class="breadcrumb">
+      <li *ngFor='let bc of breadcrumbs' class="breadcrumb-item">
+        <a href="javascript:void(0)" (click)='breadcrumbsRouting(bc)'>{{ bc.text }}</a>
+      </li>
+    </ol>
+  </nav>
+</div>

@@ -79,6 +79,28 @@
       </div>
     </div>
   </div>
+
+<!-- BEGIN Reporte UNIDADES -->
+<div *ngIf='showReporteUnidades' class="row">
+  <div class="col-md-12 mt-2">
+    <div class="card">
+      <div class="card-header bg-primary text-white text-center">
+        UNIDADES
+        <button type="button" class="btn btn-primary text-white btn-sm btn-vm" (click)='toggleUnidades()'>
+          <span class="fa fa-caret-down" title="Toggle dropdown menu"></span>
+        </button>
+      </div>
+
+      <router-outlet></router-outlet>
+
+      <wsf-suma-columnas></wsf-suma-columnas>
+      <!-- Se comunica con los componentes por medio de un servicio -->
+    </div>
+    <!-- END Card -->
+  </div>
+</div>
+<!-- END Reporte UNIDADES -->
+
   <!-- BEGIN Reporte UNIDADES -->
   <div *ngIf='showReporteUnidades' class="row">
     <div class="col-md-12 mt-2">

@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, style, transition, animate, keyframes, query, stagger, group, state, animateChild } from '@angular/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+
 import { IResultadoInternos } from './resultado-internos';
 import { InternosService } from './internos.service';
 import { ISucursal } from './sucursal';
@@ -19,6 +20,7 @@ import { ITipoUnidad } from './tipo-unidad';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
 import { ISeries } from './series';
 import { ColumnSortedEvent } from '../../shared/services/sort.service';
+
 
 
 @Component({
@@ -50,7 +52,7 @@ import { ColumnSortedEvent } from '../../shared/services/sort.service';
 export class InternosComponent implements OnInit {
   errorMessage: any;
 
-  constructor(private _service: InternosService) { }
+  constructor(private _service: InternosService, private _router: Router) { }
 
   showFilters = true;
   showUnidades = true;
@@ -189,6 +191,12 @@ export class InternosComponent implements OnInit {
     this.getResultadoUnidades();
     this.getEstadoResultados();
     this.getUnidadesDepartamento();
+
+    this.routeTo();
+  }
+
+  private routeTo(): void {
+    this._router.navigate(['./unidades/nv1', this.selectedCompania, this.selectedSucursal, this.mes, this.anio]);
   }
 
   sumaDepartamentos(): void {
