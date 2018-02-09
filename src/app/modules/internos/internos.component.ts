@@ -232,7 +232,7 @@ export class InternosComponent implements OnInit, OnDestroy {
       // });
 
       this.selectedCompania = this._route.children[0].snapshot.params['idCia'];
-      this.selectedIndexSucursal = this._route.children[0].snapshot.params['idSuc'];
+      this.selectedSucursal = this._route.children[0].snapshot.params['idSuc'];
       this.mes = this._route.children[0].snapshot.params['mes'];
       this.anio = this._route.children[0].snapshot.params['anio'];
 
