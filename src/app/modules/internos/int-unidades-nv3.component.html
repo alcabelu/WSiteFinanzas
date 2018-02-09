@@ -1,9 +1,102 @@
 <div class="card-body">
   <nav role="navigation">
     <ol class="breadcrumb">
-      <li *ngFor='let bc of breadcrumbs' class="breadcrumb-item">
-        <a href="javascript:void(0)" (click)='breadcrumbsRouting(bc)'>{{ bc.text }}</a>
+      <li *ngFor='let bc of breadcrumbs' class="breadcrumb-item" [ngClass]='{"active": bc.active}'>
+        <a *ngIf='!bc.active; else breadcrumbActive' href="javascript:void(0)" (click)='breadcrumbsRouting(bc)'>{{ bc.text }}</a>
+
+        <ng-template #breadcrumbActive>
+          {{ bc.text }}
+        </ng-template>
       </li>
     </ol>
   </nav>
+
+  <div *ngIf='idAcumulado === 1' class="row justify-content-center">
+      <div class="col-md-6">
+        <table class="table table-sm table-bordered table-hover-td" id="idDetalleUnidadesTipo" sortable-table (sorted)="onSorted($event, detalleUnidadesTipo)">
+          <thead>
+            <tr>
+              <th class="bg-orange text-white">Tipo Unidad</th>
+              <th class="bg-orange text-white text-center" style="width:33%;" sortable-column='Cantidad'>Cantidad</th>
+              <th class="bg-orange text-white text-center" style="width:33%;" sortable-column='Perc'>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor='let d of detalleUnidadesTipo; let i = index;' (dblclick)='onClickDetalleUnidadesTipo(d.TipoUnidad)'>
+              <td>{{ d.TipoUnidad }}</td>
+              <td class="text-center" [suma-columnas]='d.Cantidad'>{{ d.Cantidad }}</td>
+              <td class="text-right" [suma-columnas]='d.Perc'>{{ d.Perc | number: '1.2-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!--BEGIN Unidades Segundo Nivel Acumulado -->
+    <table id="idDetalleUnidadesTipo" *ngIf='idAcumulado === 2' class="table table-sm table-bordered table-responsive table-hover-td table-double-scroll"
+      sortable-table (sorted)="onSorted($event, detalleUnidadesTipo)">
+      <thead>
+        <tr>
+          <th class="bg-secondary text-white min-width-135">TipoUnidad</th>
+          <th class="bg-secondary text-white" sortable-column='Ene'>ENE</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Feb'>FEB</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Mar'>MAR</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Abr'>ABR</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='May'>MAY</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Jun'>JUN</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Jul'>JUL</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Ago'>AGO</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Sep'>SEP</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Oct'>OCT</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Nov'>NOV</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='Dic'>DIC</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+          <th class="bg-secondary text-white" sortable-column='TOTAL'>TOTAL</th>
+          <th class="bg-secondary text-white text-center"> % </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor='let dut of detalleUnidadesTipo; let i = index;'>
+          <td>{{ dut.TipoUnidad }}</td>
+          <td class="text-center" [suma-columnas]='dut.Ene' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "01")'>{{ dut.Ene }}</td>
+          <td class="text-right">{{ dut.PercEne | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Feb' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "02")'>{{ dut.Feb }}</td>
+          <td class="text-right">{{ dut.PercFeb | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Mar' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "03")'>{{ dut.Mar }}</td>
+          <td class="text-right">{{ dut.PercMar | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Abr' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "04")'>{{ dut.Abr }}</td>
+          <td class="text-right">{{ dut.PercAbr | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.May' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "05")'>{{ dut.May }}</td>
+          <td class="text-right">{{ dut.PercMay | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Jun' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "06")'>{{ dut.Jun }}</td>
+          <td class="text-right">{{ dut.PercJun | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Jul' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "07")'>{{ dut.Jul }}</td>
+          <td class="text-right">{{ dut.PercJul | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Ago' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "08")'>{{ dut.Ago }}</td>
+          <td class="text-right">{{ dut.PercAgo | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Sep' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "09")'>{{ dut.Sep }}</td>
+          <td class="text-right">{{ dut.PercSep | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Oct' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "10")'>{{ dut.Oct }}</td>
+          <td class="text-right">{{ dut.PercOct | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Nov' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "11")'>{{ dut.Nov }}</td>
+          <td class="text-right">{{ dut.PercNov | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]='dut.Dic' (dblclick)='onClickDetalleUnidadesTipo(dut.TipoUnidad, "12")'>{{ dut.Dic }}</td>
+          <td class="text-right">{{ dut.PercDic | number:'1.2-2' }}</td>
+          <td class="text-center" [suma-columnas]=''>{{ dut.TOTAL }}</td>
+          <td class="text-right">{{ dut.PercTotal | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <!--END Unidades Segundo Nivel Acumulado -->
 </div>

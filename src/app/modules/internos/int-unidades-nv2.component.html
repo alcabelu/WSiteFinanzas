@@ -8,11 +8,6 @@
                     {{ bc.text }}
                 </ng-template>
             </li>
-
-          <!-- <li class="breadcrumb-item">
-            <a href="javascript:void(0)" (click)='hideDetalleUnidadesPrimerNivel()'>{{ selectedNombreCompania }}</a>
-          </li>
-          <li class="breadcrumb-item active">{{ detalleUnidadesConcepto }}</li> -->
         </ol>
       </nav>
   <div *ngIf='idAcumulado === 1' class="row justify-content-center">
@@ -28,7 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor='let d of detalleUnidadesMensual; let i = index;' (dblclick)='onClickDetalleUnidadesMensual(d.CarLine, "TipoUnidades", "", d.Depto)'>
+          <tr *ngFor='let d of detalleUnidadesMensual; let i = index;' (dblclick)='onClickDetalleUnidadesMensual(d.CarLine, "", d.Depto)'>
             <td *ngIf='detalleUnidadesConcepto === "N FLOTILLAS"'>{{ d.Depto }}</td>
             <td>{{ d.CarLine }}</td>
             <td class="text-center" [suma-columnas]='d.Cantidad'>{{ d.Cantidad === null ? 0 : d.Cantidad }}</td>

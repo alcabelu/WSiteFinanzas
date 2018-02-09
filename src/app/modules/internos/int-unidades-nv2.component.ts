@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InternosService } from './internos.service';
 import { IDetalleUnidadesMensual } from './detalle-unidades-mensual';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
-import { ColumnSortedEvent } from '../../shared/index';
+import { ColumnSortedEvent, UtilsService } from '../../shared/index';
 import { BreadcrumbService, IBreadcrumb } from './breadcrumb.service';
 import { Observable } from 'rxjs/Observable';
 
@@ -30,7 +30,9 @@ export class IntUnidadesNv2Component implements OnInit, OnDestroy {
   constructor(private _service: InternosService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _breadcrumbService: BreadcrumbService) { }
+    private _breadcrumbService: BreadcrumbService,
+    private _utils: UtilsService
+  ) { }
 
   ngOnInit() {
     this.idCia = this._route.snapshot.params['idCia'];
@@ -101,9 +103,9 @@ export class IntUnidadesNv2Component implements OnInit, OnDestroy {
       // Cuando no viene el parametro de mes, significa que es reporte mensual y se usa el mes que viene del nivel anterior
       mes = mes === '' ? this.mes : mes;
 
-      const bc: IBreadcrumb = { text: this.concepto + this.idCia, url: this._router.url, index: 1, active: true };
+      const bc: IBreadcrumb = { text: `${carLine} (${this._utils.toLongMonth(mes)})`, url: this._router.url, index: 2, active: true };
       this._breadcrumbService.addBreadcrumb(bc);
-      this._router.navigate(['./unidades/nv3', this.idCia, this.idSucursal, this.mes, this.anio, carLine, this.idAcumulado ]);
+      this._router.navigate(['./unidades/nv3', this.idCia, this.idSucursal, this.mes, this.anio, carLine, this.idAcumulado, depto ]);
     }
   }
 

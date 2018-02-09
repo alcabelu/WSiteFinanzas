@@ -11,8 +11,17 @@ export class BreadcrumbService {
   private breadcrumbSource = new Subject<IBreadcrumb[]>();
   breadcrumb$ = this.breadcrumbSource.asObservable();
 
+  createBreadcrumbs(breadcrumbs: IBreadcrumb[]) {
+    this.breadcrumbList = breadcrumbs;
+    this.getBreadcrumbs();
+  }
+
   getBreadcrumbs() {
     this.breadcrumbSource.next(this.breadcrumbList);
+  }
+
+  clearBreadcrumbs() {
+    this.breadcrumbList = [];
   }
 
   addBreadcrumb(value: IBreadcrumb) {
@@ -41,6 +50,10 @@ export class BreadcrumbService {
 
     // Quita los elementos de la derecha a partir del index
     this.breadcrumbList.splice(index, steps);
+  }
+
+  getConcepto(nivel: number): string {
+    return this.breadcrumbList[nivel].text;
   }
 }
 

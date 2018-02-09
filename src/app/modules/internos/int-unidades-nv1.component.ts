@@ -35,6 +35,9 @@ export class IntUnidadesNv1Component implements OnInit, OnDestroy {
         this.getResultadoUnidades();
       }
     );
+
+    // Actualizar info de navegacion (breadcrumbs)
+    // let route = `./unidades/nv2/${this.idCia}/${this.idSucursal}/${this.mes}/${this.anio}/${idAcumulado}/${concepto}`;
   }
 
   ngOnDestroy() {
@@ -56,9 +59,9 @@ export class IntUnidadesNv1Component implements OnInit, OnDestroy {
 
   onClickUnidades(concepto: string, idAcumulado: number) {
     if (concepto !== 'Total Unidades') {
-      const bc: IBreadcrumb = { text: 'idCIa: ' + this.idCia, url: this._router.url, index: 0, active: true };
+      const bc: IBreadcrumb = { text: concepto, url: this._router.url, index: 1, active: true };
       this._breadcrumbService.addBreadcrumb(bc);
-      this._router.navigate(['./unidades/nv2', this.idCia, this.idSucursal, this.mes, this.anio, concepto, idAcumulado ]);
+      this._router.navigate(['./unidades/nv2', this.idCia, this.idSucursal, this.mes, this.anio, idAcumulado, concepto ]);
     }
   }
 

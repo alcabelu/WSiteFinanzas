@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { trigger, style, transition, animate, keyframes, query, stagger, group, state, animateChild } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { IResultadoInternos } from './resultado-internos';
 import { InternosService } from './internos.service';
@@ -20,6 +20,8 @@ import { ITipoUnidad } from './tipo-unidad';
 import { IDetalleUnidadesAcumulado } from './detalle-unidades-acumulado';
 import { ISeries } from './series';
 import { ColumnSortedEvent } from '../../shared/services/sort.service';
+import { IBreadcrumb, BreadcrumbService } from './breadcrumb.service';
+import { Subscription } from 'rxjs/Subscription';
 
 
 
@@ -49,10 +51,13 @@ import { ColumnSortedEvent } from '../../shared/services/sort.service';
     routerTransition()
   ]
 })
-export class InternosComponent implements OnInit {
+export class InternosComponent implements OnInit, OnDestroy {
   errorMessage: any;
 
-  constructor(private _service: InternosService, private _router: Router) { }
+  constructor(private _service: InternosService, private _router: Router,
+    private _breadcrumbService: BreadcrumbService, private _route: ActivatedRoute) { }
+
+  private paramsSubscription: Subscription;
 
   showFilters = true;
   showUnidades = true;
@@ -148,6 +153,15 @@ export class InternosComponent implements OnInit {
     this.setDefaultDate();
     this.setTipoReporte();
     this.getCompanias();
+
+    // Cuando el usuario se dirige directamente a  una ruta nv2 - nv4  no se debe redirigir a nv1
+    if (this._route.children.length > 0) {
+      this.subscribeToRouteParams();
+    }
+  }
+
+  ngOnDestroy() {
+    // this.paramsSubscription.unsubscribe();
   }
 
   toggleFilters(): void {
@@ -177,9 +191,8 @@ export class InternosComponent implements OnInit {
     } else if (sCompania !== '0') {
       this.showUnidadesInit();
 
-      // Actualizar info de breadcrumb
-      const a = this.companias.find(x => x.ID === +this.selectedCompania);
-      this.selectedNombreCompania = a.NOMBRE;
+      // Actualizar info de breadcrumb (versión pasada)
+      this.selectedNombreCompania = this.getNombreCompania(+this.selectedCompania);
     }
   }
 
@@ -192,11 +205,40 @@ export class InternosComponent implements OnInit {
     this.getEstadoResultados();
     this.getUnidadesDepartamento();
 
-    this.routeTo();
+    this.routeToNv1();
   }
 
-  private routeTo(): void {
+  private routeToNv1(): void {
     this._router.navigate(['./unidades/nv1', this.selectedCompania, this.selectedSucursal, this.mes, this.anio]);
+  }
+
+  private getNombreCompania(idCompania: number): string {
+     const a = this.companias.find(x => x.ID === idCompania);
+     return a.NOMBRE;
+  }
+
+  private subscribeToRouteParams(): void {
+    // Cuando ya trae la ruta de nv1 ... nv4 poblar los datos de los filtros
+    if (this._route.children.length > 0) {
+      // this.paramsSubscription = this._route.children[0].params.subscribe(
+      // params => {
+      //   this.selectedCompania = params['idCia'];
+      //   this.selectedSucursal = params['idSuc'];
+      //   this.mes = params['mes'];
+      //   this.anio = params['anio'];
+
+      //   this.getSucursales();
+      //   this.setPeriodo();
+      // });
+
+      this.selectedCompania = this._route.children[0].snapshot.params['idCia'];
+      this.selectedIndexSucursal = this._route.children[0].snapshot.params['idSuc'];
+      this.mes = this._route.children[0].snapshot.params['mes'];
+      this.anio = this._route.children[0].snapshot.params['anio'];
+
+      this.getSucursales();
+      this.setPeriodo();
+    }
   }
 
   sumaDepartamentos(): void {
@@ -303,8 +345,7 @@ export class InternosComponent implements OnInit {
     })
       .subscribe(
         departamentos => { this.departamentos = departamentos; },
-        error => this.errorMessage = <any>error,
-        () => this.procesar()
+        error => this.errorMessage = <any>error
       );
   }
 
@@ -331,6 +372,12 @@ export class InternosComponent implements OnInit {
     this.mes = mesStr;
     this.anio = anio;
     this.periodo = anio + '-' + mesStr;
+  }
+
+  setPeriodo(): void {
+    const mes = this.mes;
+    const anio = this.anio;
+    this.periodo = anio + '-' + mes;
   }
 
   getDetalleResultadosMensual(concepto: string): void {
