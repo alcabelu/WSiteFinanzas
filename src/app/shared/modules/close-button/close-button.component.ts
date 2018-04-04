@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: '[wsf-close-button]',
   templateUrl: './close-button.component.html',
   styleUrls: ['./close-button.component.scss']

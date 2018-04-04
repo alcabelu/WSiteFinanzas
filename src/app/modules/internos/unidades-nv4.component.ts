@@ -4,7 +4,6 @@ import { ISeries } from './series';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'int-unidades-nv4',
   templateUrl: './unidades-nv4.component.html',
   styleUrls: ['./internos.component.scss']
@@ -13,38 +12,40 @@ export class UnidadesNv4Component implements OnInit {
 
   @Input() detalleUnidadesConcepto: string;
   @Input() detalleUnidadesConceptoSegundoNivel: string;
-  @Input() idOrigen: number;
   @Input() anio: string;
   @Input() mes: string;
-  @Input() mesAcumuladoNv3: string;
   @Input() selectedCompania: number;
-  @Input() selectedIdSucursal: number;
+  @Input() selectedSucursal: string;
   @Input() tipoAuto: string;
   @Input() idReporte: string;
   @Input() deptoFlotillas: string;
-
-  @Input() isUnidadesDepto: boolean;
-  @Input() selectedIdDepartamento: number;
-
 
   detalleUnidadesSeries: Observable<ISeries[]>;
 
   constructor(private _service: InternosService) { }
 
   ngOnInit() {
-    this.detalleUnidadesSeries = this.getDetalleUnidadesSeries();
+    this.detalleUnidadesSeries = this.getDetalleUnidadesSeries(this.tipoAuto, this.idReporte, this.mes);
   }
 
-  getDetalleUnidadesSeries(): Observable<ISeries[]> {
+  getDetalleUnidadesSeries(tipoAuto: string = '', idReporte: string, mes: string): Observable<ISeries[]> {
+    // Se usa como parametro de departamento el texto de Concepto del primer nivel,
+    // sin las letras N o S que se le agregan al inicio
+    let concepto = this.detalleUnidadesConcepto;
+
+    if (concepto.startsWith('N ')) concepto = concepto.substr(2);
+    else if (concepto.startsWith('S ')) concepto = concepto.substr(2);
+
     return this._service.getDetalleUnidadesSeries({
-      idCompania: this.selectedIdSucursal > 0 ? 0 : this.selectedCompania,
-      idSucursal: this.selectedIdSucursal > 0 ? this.selectedIdSucursal : 0,
-      idOrigen: this.idOrigen,
-      idPestana: this.selectedIdDepartamento,
-      periodoYear: +this.anio,
-      periodoMes: +this.mes,
-      unidadDescripcion: this.tipoAuto,
-      isUnidadesDepto: this.isUnidadesDepto
+      idAgencia: this.selectedCompania,
+      mSucursal: this.selectedSucursal,
+      anio: this.anio,
+      mes: mes === '' ? this.mes : mes, //Cuando se manda a llamar desde acumulado (lado verde) contiene el parametro de mes
+      departamento: concepto === 'FLOTILLAS' ? this.deptoFlotillas : concepto,
+      idEstadoDeResultado: 1, //QUITAR HARD CODE CUANDO TIBERIO COMPLETE EL SP
+      idReporte: idReporte,
+      carLine: this.detalleUnidadesConceptoSegundoNivel,
+      tipoAuto: tipoAuto
     });
   }
 }

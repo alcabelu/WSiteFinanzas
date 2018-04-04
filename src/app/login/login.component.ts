@@ -33,14 +33,14 @@ export class LoginComponent implements OnInit {
     this.onChanges();
   }
 
-  // Borra mensaje de usuario cuando se edita el formulario
+  //Borra mensaje de usuario cuando se edita el formulario
   onChanges(): void {
     this.signupForm.valueChanges.subscribe(val => {
       this.mensajeUsuario = '';
     });
   }
 
-  // Cacha el submit del formulario y llama el sp de login
+  //Cacha el submit del formulario y llama el sp de login
   onSubmit() {
     if (this.signupForm.valid) {
       this.mensajeUsuario = '';
@@ -48,13 +48,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  // Cuando todo OK, guarda la variable local que usa AuthGuard
-  onLoggedIn(userLogged: IAuth) {
-    localStorage.setItem('userLogged', JSON.stringify(userLogged));
+  //Cuando todo OK, guarda la variable local que usa AuthGuard
+  onLoggedIn() {
+    localStorage.setItem('isLoggedin', 'true');
     this.router.navigateByUrl('');
   }
 
-  // Invoca el servicio de Login
+  //Invoca el servicio de Login
   getAuth(): void {
     this._service.getAuth({
       usuario: this.usuario.value,
@@ -62,17 +62,18 @@ export class LoginComponent implements OnInit {
       mensajeUsuario: ''
     })
       .subscribe(
-      auth => { this.authUsuario = auth; },
-      error => { this.mensajeUsuario = <any>error; },
+        auth => { this.authUsuario = auth; },
+        error => { this.mensajeUsuario = <any>error },
       () => {
-        // Cuando el servicio no regresa un mensaje de usuario, significa que
-        // la autenticación es correcta.
-        if (!this.authUsuario[0].MensajeUsuario) {
-          this.onLoggedIn(this.authUsuario[0]);
-        } else {
-          this.mensajeUsuario = this.authUsuario[0].MensajeUsuario;
-        }
-      } // LocalStorage para el usuario?
+          //Cuando el servicio no regresa un mensaje de usuario, significa que
+          //la autenticación es correcta.
+          if (!this.authUsuario[0].MensajeUsuario) {
+            this.onLoggedIn();
+          }
+          else {
+            this.mensajeUsuario = this.authUsuario[0].MensajeUsuario;
+          }
+        } //LocalStorage para el usuario?
       );
   }
 

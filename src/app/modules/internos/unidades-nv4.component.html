@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th class="bg-secondary text-white">Modelo</th>
+      <th class="bg-secondary text-white">IdBI</th>
       <th class="bg-secondary text-white">Status</th>
       <th class="bg-secondary text-white">IdCliente</th>
       <th class="bg-secondary text-white min-width-220">Nombre</th>
@@ -25,25 +26,26 @@
   </thead>
   <tbody>
     <tr *ngFor='let dus of detalleUnidadesSeries | async'>
-      <td>{{ dus.unidadYear }}</td>
-      <td>{{ dus.estatus }}</td>
-      <td>{{ dus.idCliente }}</td>
-      <td>{{ dus.clienteRazonSocial }}</td>
-      <td>{{ dus.clienteRFC }}</td>
-      <td>{{ dus.vendedor }}</td>
-      <td>{{ dus.pedido }}</td>
-      <td>{{ dus.factura }}</td>
-      <td>{{ dus.InventarioNumero }}</td>
-      <td>{{ dus.serieNumero }}</td>
-      <td class="text-right" [suma-columnas]='dus.precioBase'>{{ dus.precioBase | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.impuestoISAN'>{{ dus.impuestoISAN | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.ivaPorcentaje'>{{ dus.ivaPorcentaje | number:'1.0-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.ivaImporte'>{{ dus.ivaImporte | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.importeTotal'>{{ dus.importeTotal | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.costo'>{{ dus.costo | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.incentivo'>{{ dus.incentivo | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.costoTotal'>{{ dus.costoTotal | number:'1.2-2' }}</td>
-      <td class="text-right" [suma-columnas]='dus.utilidad'>{{ dus.utilidad | number:'1.2-2' }}</td>
+      <td>{{ dus.Modelo }}</td>
+      <td>{{ dus.IdBI }}</td>
+      <td>{{ dus.Status }}</td>
+      <td>{{ dus.IdCliente }}</td>
+      <td>{{ dus.Nombre }}</td>
+      <td>{{ dus.RFC }}</td>
+      <td>{{ dus.Vendedor }}</td>
+      <td>{{ dus.Pedido }}</td>
+      <td>{{ dus.Factura }}</td>
+      <td>{{ dus.NumInventario }}</td>
+      <td>{{ dus.Serie }}</td>
+      <td class="text-right">{{ dus.PrecioBase | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.Isan | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.PercIVA | number:'1.0-2' }}</td>
+      <td class="text-right">{{ dus.PrecioBase | iva: dus.Isan | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.ImporteTotal | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.CostoCompra | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.Incentivo | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.TotalCompra | number:'1.2-2' }}</td>
+      <td class="text-right">{{ dus.Utilidad | number:'1.2-2' }}</td>
     </tr>
   </tbody>
 </table>

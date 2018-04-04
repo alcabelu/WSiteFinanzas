@@ -28,7 +28,7 @@ Login.prototype.get_auth = function (req, res, next) {
     { name: 'MensajeUsuario', value: mensajeUsuario, type: self.model.types.STRING }
   ];
 
-  this.model.query('Seguridad.Login', params, function (error, result) {
+  this.model.query('SP_LogiWebSiteFinzas', params, function (error, result) {
     //Cuando la contraseña es incorrecta, no existe el objeto result
     if (typeof result === 'undefined') {
       result = [{ 'MensajeUsuario': 'La contraseña es incorrecta' }];

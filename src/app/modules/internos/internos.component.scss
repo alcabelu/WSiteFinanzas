@@ -37,22 +37,12 @@
   min-width: 135px;
 }
 
-.min-width-150 {
-  min-width: 150px;
-}
-
 .btn-vm, {
   line-height: 1;
 }
 
 .btn-primary:focus, .btn-primary.focus {
   box-shadow: none;
-}
-
-.btn-outline-secondary:hover {
-  color: #868e96;
-  background-color: #fff;
-  border-color: #868e96;
 }
 
 //Boton cerrar
@@ -92,7 +82,7 @@
   width: 98.4%;
   tbody{
     width: 101.6%;
-    //height:800px; TMC Se comenta ya que se utiliza el scroll de la pagina
+    height:300px;
     overflow-y:auto;
     }
   thead,tbody,tr,td,th{
@@ -115,10 +105,6 @@
   }
 }
 
-.table-success {
-  background-color: #c3e6cb !important;
-}
-
 //Tabla sin scroll
 .table-without-scroll {
   width: 100%;
@@ -129,23 +115,7 @@
 
 //Tabla con doble scroll (x,y)
 .table-double-scroll {
-  //height: 300px;TMC Se comenta ya que se utiliza el scroll de la pagina
-  border-spacing: 0px;
-  border-collapse: separate;
-  overflow: auto;
-
-  th, td {
-    border-bottom: 1px solid #e9ecef;
-    border-right: 1px solid #e9ecef;
-  }
-
-  td {
-    background-color: #fff;
-  }
-}
-
-.table-double-scroller {
-  height: 410px !important;
+  height: 300px;
   border-spacing: 0px;
   border-collapse: separate;
   overflow: auto;
@@ -162,10 +132,5 @@
 
 .custom-select {
   padding: 0.375rem 0.1rem 0.375rem 0.75rem;
-  width: 100%
 }
 
-.table-responsive {  display: table !important; }
-.scrolltable{ overflow-x: auto;}
-.table-fixed[_ngcontent-c4] tbody[_ngcontent-c4] {width: 100% !important;}
-.table-fixed[_ngcontent-c4] {width: 100% !important;}

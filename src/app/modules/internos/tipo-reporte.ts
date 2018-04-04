@@ -1,4 +1,4 @@
 export interface ITipoReporte {
-  Id: number;
-  Descripcion: string;
+  Id: number,
+  Descripcion: string
 }

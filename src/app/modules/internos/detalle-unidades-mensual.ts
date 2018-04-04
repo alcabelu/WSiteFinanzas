@@ -1,9 +1,8 @@
 export interface IDetalleUnidadesMensual {
-  idAutoLinea: number;
-  autoLinea: string;
-  cantidad: number;
-  CantidadSelected: boolean;
-  Perc: number;
-  departamento: string;
-  departamentoOri: string;
+  Depto: string,
+  CarLine: string,
+  Cantidad: number,
+  CantidadSelected: boolean,
+  Perc: number,
+  PercSelected: boolean
 }

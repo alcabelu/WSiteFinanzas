@@ -22,7 +22,7 @@ export class LoginService {
 
     // Begin assigning parameters
     Params = Params.append('usuario', parameters.usuario);
-    Params = Params.append('password', parameters.password);
+    Params = Params.append('password', parameters.password)
     Params = Params.append('mensajeUsuario', parameters.mensajeUsuario);
 
     return this._http.get<IAuth[]>(this._urlLogin, { params: Params })

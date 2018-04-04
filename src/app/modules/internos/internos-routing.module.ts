@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { InternosComponent } from './internos.component';
+import { InternosComponent } from './internos.component'
 
 const routes: Routes = [
     {

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line:component-selector
   selector: 'wsf-cuentas-sin-clasificar-select',
   templateUrl: './cuentas-sin-clasificar-select.component.html',
   styleUrls: ['./cuentas-sin-clasificar-select.component.scss']
