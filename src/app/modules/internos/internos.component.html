@@ -1,4 +1,10 @@
 <div [@routerTransition]>
+    <div class="preloader" *ngIf="activeSpinner">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Cargando...</p>
+        </div>
+    </div>
   <div class="row">
     <div class="col-md-12">
       <div class="card">
